@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 //authentication
 import Login from "./pages/auth/Login";
@@ -8,6 +8,8 @@ import Register from "./pages/auth/Register";
 import Home from "./pages/Home";
 import PageNotFound from "./pages/PageNotFound";
 import Header from "./components/nav/Header";
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 const App = () => {
   return (
     <>
