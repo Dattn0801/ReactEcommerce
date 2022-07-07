@@ -15,6 +15,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 //Toast message
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import RegisterComplete from "./pages/auth/RegisterComplete";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/registercomplete" element={<RegisterComplete />} />
       </Routes>
     </>
   );
