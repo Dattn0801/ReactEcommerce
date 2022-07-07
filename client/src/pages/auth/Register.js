@@ -15,7 +15,7 @@ const Register = () => {
     await sendSignInLinkToEmail(auth, email, actionCodeSettings)
       .then(() => {
         toast.success(
-          `Email is sent to ${email}. Click the link to complete your registration`
+          `Email xác thực đã được gửi đến địa chỉ ${email}.Kiểm tra email để hoàn tất quá trình đăng nhập`
         );
         console.log(1);
         //Save email on localstorage
