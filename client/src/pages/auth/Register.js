@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { sendSignInLinkToEmail } from "firebase/auth";
 import { auth } from "../../firebase";
 
@@ -8,8 +7,9 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const handleSumit = async (e) => {
     e.preventDefault();
+    console.log(process.env.REACT_APP_REGISTER_REDIRECT_URL);
     const actionCodeSettings = {
-      url: "http://localhost:3000/register/complete",
+      url: process.env.REACT_APP_REGISTER_REDIRECT_URL,
       handleCodeInApp: true,
     };
     await sendSignInLinkToEmail(auth, email, actionCodeSettings)
@@ -48,11 +48,10 @@ const Register = () => {
     <div className="container p-5">
       <div className="row">
         <div className="col-md-6 offset-md-3">
-          <ToastContainer />
           <h4>Form đăng kí</h4>
           {registerForm()}
-          </div>
         </div>
+      </div>
     </div>
   );
 };
