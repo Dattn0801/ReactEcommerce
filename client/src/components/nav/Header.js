@@ -5,16 +5,32 @@ import {
   SettingOutlined,
   UserOutlined,
   UserAddOutlined,
+  LoginOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+
+import { getAuth, signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 const { SubMenu, Item } = Menu;
 
 const Header = () => {
   const [current, setCurrent] = useState("home");
-
+  let dispatch = useDispatch();
+  let navigate = useNavigate();
+  // let history = useHistory();
   const handleClick = (e) => {
-    console.log(e.key);
     setCurrent(e.key);
+  };
+  const logout = () => {
+    const auth = getAuth();
+    signOut(auth);
+
+    dispatch({
+      type: "LOGOUT",
+      payload: null,
+    });
+    navigate("/login");
   };
   return (
     <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">
@@ -26,6 +42,9 @@ const Header = () => {
       <Menu.SubMenu icon={<SettingOutlined />} title="Username">
         <Menu.Item key="setting:1">Option 1</Menu.Item>
         <Menu.Item key="setting:2">Option 2</Menu.Item>
+        <Menu.Item icon={<LoginOutlined />} onClick={logout}>
+          Đăng xuất
+        </Menu.Item>
       </Menu.SubMenu>
       <Menu.Item
         key="register"
@@ -35,11 +54,7 @@ const Header = () => {
         <Link to="/register">Register</Link>
       </Menu.Item>
 
-      <Menu.Item
-        key="login"
-        icon={<UserOutlined />}
-        className="float-right"
-      >
+      <Menu.Item key="login" icon={<UserOutlined />} className="float-right">
         <Link to="/login">Login</Link>
       </Menu.Item>
     </Menu>
