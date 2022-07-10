@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 const RegisterComplete = ({ history }) => {
   let navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -46,7 +45,6 @@ const RegisterComplete = ({ history }) => {
         navigate("/");
       }
     } catch (error) {
-      console.log(error);
       toast.error(error);
     }
   };
