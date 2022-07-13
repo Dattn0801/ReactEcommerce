@@ -4,7 +4,7 @@ import { signInWithEmailLink, updatePassword } from "firebase/auth";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 
-const RegisterComplete = ({ history }) => {
+const RegisterComplete = () => {
   let navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

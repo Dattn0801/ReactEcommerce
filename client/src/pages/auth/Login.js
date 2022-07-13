@@ -1,16 +1,40 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { sendSignInLinkToEmail } from "firebase/auth";
 import { auth } from "../../firebase";
 import { Button } from "antd";
 import { MailOutlined } from "@ant-design/icons";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  let navigate = useNavigate();
+  let dispatch = useDispatch();
+
   const handleSumit = async (e) => {
     e.preventDefault();
-    console.table(email, password);
+    setLoading(true);
+
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const { user } = result;
+      const idTokenResult = await user.getIdTokenResult();
+      dispatch({
+        type: "LOGGED_IN_USER",
+        payload: {
+          name: user.email,
+          token: idTokenResult,
+        },
+      });
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      toast(error);
+      setLoading(false);
+    }
   };
   const loginForm = () => (
     <form onSubmit={handleSumit}>
