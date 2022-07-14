@@ -3,7 +3,11 @@ import { toast } from "react-toastify";
 import { auth } from "../../firebase";
 import { Button } from "antd";
 import { MailOutlined } from "@ant-design/icons";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -36,6 +40,23 @@ const Login = () => {
       setLoading(false);
     }
   };
+  const googleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then(async (result) => {
+        const { user } = result;
+        const idTokenResult = await user.getIdTokenResult();
+        dispatch({
+          type: "LOGGED_IN_USER",
+          payload: {
+            name: user.email,
+            token: idTokenResult,
+          },
+        });
+        navigate("/");
+      })
+      .catch((err) => console.log(err));
+  };
   const loginForm = () => (
     <form onSubmit={handleSumit}>
       <input
@@ -67,9 +88,9 @@ const Login = () => {
         shape="round"
         icon={<MailOutlined />}
         size="large"
-        disabled={!email || !password}
+        disabled={!email || password < 6}
       >
-        Đăng nhập
+        Đăng nhập bằng Email/Password
       </Button>
     </form>
   );
@@ -77,8 +98,23 @@ const Login = () => {
     <div className="container p-5">
       <div className="row">
         <div className="col-md-6 offset-md-3">
-          <h4>Đăng nhập</h4>
+          {loading ? (
+            <h4 className="text-danger">Loading ...</h4>
+          ) : (
+            <h4>Đăng nhập</h4>
+          )}
           {loginForm()}
+          <Button
+            onClick={googleLogin}
+            type="danger"
+            className="mb-3"
+            block
+            shape="round"
+            icon={<MailOutlined />}
+            size="large"
+          >
+            Đăng nhập với google
+          </Button>
         </div>
       </div>
     </div>
