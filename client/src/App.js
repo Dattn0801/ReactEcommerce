@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 //authentication
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-
+import ForgotPassword from "./pages/auth/ForgotPassword";
 //Pages
 import Home from "./pages/Home";
 import PageNotFound from "./pages/PageNotFound";
@@ -49,6 +49,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/register/complete" element={<RegisterComplete />} />
+        <Route path="/forgot/password" element={<ForgotPassword />} />
       </Routes>
     </>
   );

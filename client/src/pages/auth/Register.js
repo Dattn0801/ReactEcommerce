@@ -7,8 +7,8 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const handleSumit = async (e) => {
     e.preventDefault();
-    console.log(process.env.REACT_APP_REGISTER_REDIRECT_URL);
     const actionCodeSettings = {
+      // url go after click button
       url: process.env.REACT_APP_REGISTER_REDIRECT_URL,
       handleCodeInApp: true,
     };
@@ -40,7 +40,7 @@ const Register = () => {
         autoFocus
       />
       <br />
-      <button type="submit" className="btn btn-outline-secondary">
+      <button type="submit" className="btn btn-outline-primary">
         Đăng kí
       </button>
     </form>

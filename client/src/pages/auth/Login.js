@@ -9,7 +9,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -17,7 +17,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   let navigate = useNavigate();
   let dispatch = useDispatch();
-
 
   const handleSumit = async (e) => {
     e.preventDefault();
@@ -116,6 +115,9 @@ const Login = () => {
           >
             Đăng nhập với google
           </Button>
+          <Link to="/forgot/password" className="float-right text-danger">
+            Quên mật khẩu ?
+          </Link>
         </div>
       </div>
     </div>
