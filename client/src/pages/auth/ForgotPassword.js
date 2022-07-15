@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { auth } from "../../firebase";
-import { Button } from "antd";
-import { MailOutlined } from "@ant-design/icons";
 import {
-  GoogleAuthProvider,
   sendPasswordResetEmail,
-  signInWithEmailAndPassword,
-  signInWithPopup,
 } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
@@ -15,7 +10,11 @@ import { useNavigate, Link } from "react-router-dom";
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const { user } = useSelector((state) => ({ ...state }));
+  let navigate = useNavigate();
+  useEffect(() => {
+    if (user && user.token) navigate("/");
+  }, [user]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);

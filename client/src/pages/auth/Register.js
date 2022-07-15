@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { sendSignInLinkToEmail } from "firebase/auth";
 import { auth } from "../../firebase";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [email, setEmail] = useState("");
+  const { user } = useSelector((state) => ({ ...state }));
+  let navigate = useNavigate();
+  
+  useEffect(() => {
+    if (user && user.token) navigate("/");
+  }, [user]);
+
   const handleSumit = async (e) => {
     e.preventDefault();
     const actionCodeSettings = {
