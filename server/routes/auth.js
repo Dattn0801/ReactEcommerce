@@ -1,8 +1,11 @@
 const express = require("express");
 const router = express.Router();
-//import
-const createOrUpdateUser = require("../controllers/auth");
-//route
-router.get("/create-or-update-user", createOrUpdateUser);
+//middlewares
+const { authCheck } = require("../middlewares/auth");
+
+//controllers
+const { createOrUpdateUser } = require("../controllers/auth");
+
+router.get("/create-or-update-user", authCheck, createOrUpdateUser);
 
 module.exports = router;

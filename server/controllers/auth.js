@@ -1,5 +1,5 @@
 exports.createOrUpdateUser = (req, res) => {
   res.json({
-    // data:"alo"
+     data:"alo"
   });
 };
