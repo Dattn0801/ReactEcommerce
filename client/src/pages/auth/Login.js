@@ -12,6 +12,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
+const createOrUpdateUser = async (authtoken) => {
+  return await axios.post(
+    `${process.env.REACT_APP_API}/create-or-update-user`,
+    {},
+    {
+      headers: {
+        authtoken,
+      },
+    }
+  );
+};
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -53,13 +64,16 @@ const Login = () => {
       .then(async (result) => {
         const { user } = result;
         const idTokenResult = await user.getIdTokenResult();
-        dispatch({
-          type: "LOGGED_IN_USER",
-          payload: {
-            name: user.email,
-            token: idTokenResult,
-          },
-        });
+        createOrUpdateUser(idTokenResult.token)
+          .then((res) => console.log("create or update res", res))
+          .catch((err) => console.log(err));
+        // dispatch({
+        //   type: "LOGGED_IN_USER",
+        //   payload: {
+        //     name: user.email,
+        //     token: idTokenResult,
+        //   },
+        // });
         navigate("/");
       })
       .catch((err) => console.log(err));

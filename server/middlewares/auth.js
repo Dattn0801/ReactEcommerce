@@ -1,6 +1,6 @@
 const admin = require("../firebase");
 
 exports.authCheck = (req, res, next) => {
-  console.log(req.header); //token
+  console.log(req.headers); //token
   next();
 };
