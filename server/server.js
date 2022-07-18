@@ -3,11 +3,10 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const { readdirSync } = require("fs");
 require("dotenv").config();
-
 //app
 const app = express();
-
 //db
 mongoose
   .connect(process.env.CONNECTION_STRING, {
@@ -22,12 +21,7 @@ app.use(morgan("dev"));
 app.use(bodyParser.json({ limit: "2mb" }));
 app.use(cors());
 
-//route
-app.get("/api", (req, res) => {
-  res.json({
-    data: "hey u hit node api",
-  });
-});
+readdirSync("./routes").map((r) => app.use("/api", require("./routes/" + r)));
 
 app.listen(8000, () => {
   console.log("server is running http://localhost:8000");
