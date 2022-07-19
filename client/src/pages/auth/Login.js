@@ -10,19 +10,7 @@ import {
 } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
-
-const createOrUpdateUser = async (authtoken) => {
-  return await axios.post(
-    `${process.env.REACT_APP_API}/create-or-update-user`,
-    {},
-    {
-      headers: {
-        authtoken,
-      },
-    }
-  );
-};
+import createOrUpdateUser from "../../functions/auth";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,13 +32,20 @@ const Login = () => {
       const result = await signInWithEmailAndPassword(auth, email, password);
       const { user } = result;
       const idTokenResult = await user.getIdTokenResult();
-      dispatch({
-        type: "LOGGED_IN_USER",
-        payload: {
-          name: user.email,
-          token: idTokenResult,
-        },
-      });
+      createOrUpdateUser(idTokenResult.token)
+        .then((res) => {
+          dispatch({
+            type: "LOGGED_IN_USER",
+            payload: {
+              name: res.data.name,
+              email: res.data.email,
+              token: idTokenResult,
+              role: res.data.role,
+              _id: res.data._id,
+            },
+          });
+        })
+        .catch((err) => console.log(err));
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -65,18 +60,22 @@ const Login = () => {
         const { user } = result;
         const idTokenResult = await user.getIdTokenResult();
         createOrUpdateUser(idTokenResult.token)
-          .then((res) => console.log("create or update res", res))
+          .then((res) => {
+            dispatch({
+              type: "LOGGED_IN_USER",
+              payload: {
+                name: res.data.name,
+                email: res.data.email,
+                token: idTokenResult,
+                role: res.data.role,
+                _id: res.data._id,
+              },
+            });
+          })
           .catch((err) => console.log(err));
-        // dispatch({
-        //   type: "LOGGED_IN_USER",
-        //   payload: {
-        //     name: user.email,
-        //     token: idTokenResult,
-        //   },
-        // });
-        navigate("/");
       })
       .catch((err) => console.log(err));
+    navigate("/");
   };
   const loginForm = () => (
     <form onSubmit={handleSumit}>
