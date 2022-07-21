@@ -11,6 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import createOrUpdateUser from "../../functions/auth";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,9 +22,15 @@ const Login = () => {
   const { user } = useSelector((state) => ({ ...state }));
 
   useEffect(() => {
-    if (user && user.token) navigate("/");
+    // if (user && user.token) navigate("/");
   }, [user]);
-
+  const roleBaseRedirect = (res) => {
+    if (res.data.role === "admin") {
+      navigate("/admin/dashboard");
+    } else {
+      navigate("user/history");
+    }
+  };
   const handleSumit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -44,9 +51,10 @@ const Login = () => {
               _id: res.data._id,
             },
           });
+          roleBaseRedirect(res);
         })
         .catch((err) => console.log(err));
-      navigate("/");
+      // navigate("/");
     } catch (error) {
       console.log(error);
       toast(error);
@@ -71,11 +79,12 @@ const Login = () => {
                 _id: res.data._id,
               },
             });
+            roleBaseRedirect(res);
           })
           .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
-    navigate("/");
+    // navigate("/");
   };
   const loginForm = () => (
     <form onSubmit={handleSumit}>
