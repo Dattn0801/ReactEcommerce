@@ -25,11 +25,12 @@ const Login = () => {
     if (res.data.role === "admin") {
       navigate("/admin/dashboard");
     } else {
+      console.log("ola");
       navigate("/user/history");
     }
   };
   useEffect(() => {
-    //if (user && user.token) navigate("/");
+    if (user && user.token) return;
   }, [user]);
 
   const handleSumit = async (e) => {

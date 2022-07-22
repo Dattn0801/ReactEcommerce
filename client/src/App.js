@@ -63,6 +63,7 @@ const App = () => {
         <Route element={<PrivateRoutes />}>
           <Route path="/user/history" element={<History />} />
         </Route>
+        <Route path="/admin/dashboard" element={<PageNotFound />} />
       </Routes>
     </>
   );

@@ -6,6 +6,6 @@ const PrivateRoutes = () => {
   const { user } = useSelector((state) => ({ ...state }));
 
   return user && user.token ? <Outlet /> : <LoadingToRedirect />;
-  //return user && user.token ? <Outlet /> : <Navigate to="/login" />;
+  //return user && user.token ? <Outlet /> : <Navigate to="/" />;
 };
 export default PrivateRoutes;

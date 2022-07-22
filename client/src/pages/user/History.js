@@ -1,11 +1,10 @@
 import React from "react";
+
 const History = () => {
-  <div className="container-fluid">
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col">user page</div>
-      </div>
+  return (
+    <div>
+      <p>History page</p>
     </div>
-  </div>;
+  );
 };
 export default History;
