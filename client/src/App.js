@@ -10,6 +10,8 @@ import Home from "./pages/Home";
 import PageNotFound from "./pages/PageNotFound";
 import Header from "./components/nav/Header";
 import History from "./pages/user/History";
+import Password from "./pages/user/Password";
+import Wishlist from "./pages/user/Wishlist";
 import PrivateRoutes from "./components/routes/PrivateRoutes";
 //Style
 import "./App.css";
@@ -62,6 +64,8 @@ const App = () => {
         <Route path="/forgot/password" element={<ForgotPassword />} />
         <Route element={<PrivateRoutes />}>
           <Route path="/user/history" element={<History />} />
+          <Route path="/user/password" element={<Password />} />
+          <Route path="/user/wishlist" element={<Wishlist />} />
         </Route>
         <Route path="/admin/dashboard" element={<PageNotFound />} />
       </Routes>

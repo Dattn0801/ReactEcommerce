@@ -1,6 +1,6 @@
 import React from "react";
 import UserNav from "../../components/nav/UserNav";
-const History = () => {
+const Password = () => {
   return (
     <div className="container-fluid">
       <div className="row">
@@ -8,10 +8,10 @@ const History = () => {
           <UserNav />
         </div>
         <div className="col-md-10">
-          <p>history</p>
+          <p>password</p>
         </div>
       </div>
     </div>
   );
 };
-export default History;
+export default Password;
