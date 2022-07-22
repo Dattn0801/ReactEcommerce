@@ -9,6 +9,9 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import Home from "./pages/Home";
 import PageNotFound from "./pages/PageNotFound";
 import Header from "./components/nav/Header";
+import History from "./pages/user/History";
+import PrivateRoutes from "./components/routes/PrivateRoutes";
+//Style
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -57,6 +60,9 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/register/complete" element={<RegisterComplete />} />
         <Route path="/forgot/password" element={<ForgotPassword />} />
+        <Route element={<PrivateRoutes />}>
+          <Route path="/user/history" element={<History />} />
+        </Route>
       </Routes>
     </>
   );

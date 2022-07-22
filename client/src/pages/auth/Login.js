@@ -21,16 +21,17 @@ const Login = () => {
   let dispatch = useDispatch();
   const { user } = useSelector((state) => ({ ...state }));
 
-  useEffect(() => {
-    // if (user && user.token) navigate("/");
-  }, [user]);
   const roleBaseRedirect = (res) => {
     if (res.data.role === "admin") {
       navigate("/admin/dashboard");
     } else {
-      navigate("user/history");
+      navigate("/user/history");
     }
   };
+  useEffect(() => {
+    //if (user && user.token) navigate("/");
+  }, [user]);
+
   const handleSumit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -54,7 +55,6 @@ const Login = () => {
           roleBaseRedirect(res);
         })
         .catch((err) => console.log(err));
-      // navigate("/");
     } catch (error) {
       console.log(error);
       toast(error);
@@ -84,7 +84,6 @@ const Login = () => {
           .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
-    // navigate("/");
   };
   const loginForm = () => (
     <form onSubmit={handleSumit}>
