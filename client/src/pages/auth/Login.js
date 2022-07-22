@@ -25,7 +25,6 @@ const Login = () => {
     if (res.data.role === "admin") {
       navigate("/admin/dashboard");
     } else {
-      console.log("ola");
       navigate("/user/history");
     }
   };
@@ -55,10 +54,11 @@ const Login = () => {
           });
           roleBaseRedirect(res);
         })
-        .catch((err) => console.log(err));
-    } catch (error) {
-      console.log(error);
-      toast(error);
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (err) {
+      console.log(err);
       setLoading(false);
     }
   };
@@ -82,9 +82,15 @@ const Login = () => {
             });
             roleBaseRedirect(res);
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            toast.error(err);
+            console.log(err);
+          });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        toast.error(err);
+      });
   };
   const loginForm = () => (
     <form onSubmit={handleSumit}>
