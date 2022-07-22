@@ -8,7 +8,7 @@ const LoadingToRedirect = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCount((currentCount) => --currentCount);
-    }, 5000);
+    }, 1000);
     //redirect once count is equal to 0
     count === 0 && navigate("/");
     //clean up
@@ -16,7 +16,7 @@ const LoadingToRedirect = () => {
   }, [count]);
   return (
     <div className="container p-5 text-center">
-      <p>Redirecting you in {count} seconds</p>
+      <p>Bạn chưa đăng nhập, điều hướng sau {count} giây</p>
     </div>
   );
 };
