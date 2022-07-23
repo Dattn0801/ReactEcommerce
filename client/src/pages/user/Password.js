@@ -34,6 +34,7 @@ const Password = () => {
           disabled={loading}
           value={password}
         />
+        <br />
         <button
           className="btn btn-primary"
           disabled={!password || password.length < 6 || loading}
@@ -56,7 +57,6 @@ const Password = () => {
           ) : (
             <h4>Đổi mật khẩu</h4>
           )}
-
           {passwordUpdateForm()}
         </div>
       </div>
