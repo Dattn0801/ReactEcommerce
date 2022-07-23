@@ -23,6 +23,7 @@ const Login = () => {
 
   const roleBaseRedirect = (res) => {
     if (res.data.role === "admin") {
+      console.log(res.data.role);
       navigate("/admin/dashboard");
     } else {
       navigate("/user/history");

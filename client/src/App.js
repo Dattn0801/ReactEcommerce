@@ -55,7 +55,7 @@ const App = () => {
     });
     //cleanup
     return () => unsubcribe();
-  }, []);
+  }, [dispatch]);
   return (
     <>
       <Header />
@@ -72,7 +72,7 @@ const App = () => {
           <Route path="/user/password" element={<Password />} />
           <Route path="/user/wishlist" element={<Wishlist />} />
         </Route>
-        <Route element={<AdminRoutes/>}>
+        <Route element={<AdminRoutes />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
         </Route>
       </Routes>

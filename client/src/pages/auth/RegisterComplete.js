@@ -3,14 +3,13 @@ import { toast } from "react-toastify";
 import { signInWithEmailLink, updatePassword } from "firebase/auth";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import createOrUpdateUser from "../../functions/auth";
 const RegisterComplete = () => {
   let navigate = useNavigate();
   let dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { user } = useSelector((state) => ({ ...state }));
 
   useEffect(() => {
     setEmail(window.localStorage.getItem("emailForSignIn"));
