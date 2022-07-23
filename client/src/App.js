@@ -12,7 +12,12 @@ import Header from "./components/nav/Header";
 import History from "./pages/user/History";
 import Password from "./pages/user/Password";
 import Wishlist from "./pages/user/Wishlist";
-import PrivateRoutes from "./components/routes/PrivateRoutes";
+//Dashboard
+import AdminDashboard from "./pages/admin/AdminDashboard";
+//Private Routes
+import UserPrivateRoutes from "./components/routes/UserPrivateRoutes";
+//Admin Routes
+import AdminRoutes from "./components/routes/AdminRoute";
 //Style
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -31,7 +36,7 @@ const App = () => {
     const unsubcribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         const idTokenResult = await user.getIdTokenResult();
-        console.log("user", user);
+        console.log(idTokenResult);
         currentUser(idTokenResult.token)
           .then((res) => {
             dispatch({
@@ -39,7 +44,7 @@ const App = () => {
               payload: {
                 name: res.data.name,
                 email: res.data.email,
-                token: idTokenResult,
+                token: idTokenResult.token,
                 role: res.data.role,
                 _id: res.data._id,
               },
@@ -62,12 +67,14 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/register/complete" element={<RegisterComplete />} />
         <Route path="/forgot/password" element={<ForgotPassword />} />
-        <Route element={<PrivateRoutes />}>
+        <Route element={<UserPrivateRoutes />}>
           <Route path="/user/history" element={<History />} />
           <Route path="/user/password" element={<Password />} />
           <Route path="/user/wishlist" element={<Wishlist />} />
         </Route>
-        <Route path="/admin/dashboard" element={<PageNotFound />} />
+        <Route element={<AdminRoutes/>}>
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        </Route>
       </Routes>
     </>
   );

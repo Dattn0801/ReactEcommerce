@@ -48,7 +48,7 @@ const RegisterComplete = () => {
               payload: {
                 name: res.data.name,
                 email: res.data.email,
-                token: idTokenResult,
+                token: idTokenResult.token,
                 role: res.data.role,
                 _id: res.data._id,
               },
