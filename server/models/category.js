@@ -1,13 +1,12 @@
 const mongoose = require("mongoose");
-const { ObjectId } = mongoose.Schema;
 
-const categoryShema = new mongoose.Schema(
+const categorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
       trim: true,
-      require: "Name is required",
-      minlength: [3, "Too short"],
+      required: "Name is required",
+      minlength: [2, "Too short"],
       maxlength: [32, "Too long"],
     },
     slug: {
@@ -16,7 +15,14 @@ const categoryShema = new mongoose.Schema(
       lowercase: true,
       index: true,
     },
+    image:{
+      type: String,
+    },
+    color:{
+      type:String,
+    }
   },
   { timestamps: true }
 );
-module.exports = mongoose.model("Category", categoryShema);
+
+module.exports = mongoose.model("Category", categorySchema);
