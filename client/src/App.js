@@ -15,6 +15,7 @@ import Wishlist from "./pages/user/Wishlist";
 //Dashboard
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import CategoryCreate from "./pages/admin/category/CategoryCreate";
+import CategoryUpdate from "./pages/admin/category/CategoryUpdate";
 //Private Routes
 import UserPrivateRoutes from "./components/routes/UserPrivateRoutes";
 //Admin Routes
@@ -76,6 +77,7 @@ const App = () => {
         <Route element={<AdminRoutes />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/category" element={<CategoryCreate />} />
+          <Route path="/admin/category/:slug" element={<CategoryUpdate />} />
         </Route>
       </Routes>
     </>

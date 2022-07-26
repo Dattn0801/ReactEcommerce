@@ -5,8 +5,6 @@ import AdminNav from "../../../components/nav/AdminNav";
 import {
   createCategory,
   getCategories,
-  getCategory,
-  deleteCategory,
   removeCategory,
 } from "../../../functions/category";
 import { Link } from "react-router-dom";
@@ -28,7 +26,7 @@ const CategoryCreate = () => {
     createCategory({ name }, user.token)
       .then((res) => {
         setLoading(false);
-        toast.success(`"${name}" đã được tạo`);
+        toast.success(`"${res.data.name}" đã được tạo`);
         setName("");
         loadCategories();
       })
@@ -94,6 +92,7 @@ const CategoryCreate = () => {
               >
                 <DeleteOutlined className="text-danger" />
               </span>
+              <span></span>
 
               <Link to={`${c.slug}`}>
                 <span className="float-right">
