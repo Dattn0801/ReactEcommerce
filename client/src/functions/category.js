@@ -1,36 +1,28 @@
 import axios from "axios";
 
-//get all categories
 export const getCategories = async () =>
-  await axios.get(`${process.env.REACT_APP_APT}/categories`);
+  await axios.get(`${process.env.REACT_APP_API}/categories`);
 
-// get on category by slug
 export const getCategory = async (slug) =>
-  await axios.get(`${process.env.REACT_APP_APT}/${slug}`);
+  await axios.get(`${process.env.REACT_APP_API}/category/${slug}`);
 
-  //delete category by slug
-export const deleteCategory = async (slug, authtoken) => {
-  await axios.delete(`${process.env.REACT_APP_APT}/${slug}`, {
+export const removeCategory = async (slug, authtoken) =>
+  await axios.delete(`${process.env.REACT_APP_API}/category/${slug}`, {
     headers: {
       authtoken,
     },
   });
-};
 
-//update category by slug
-export const updateCategory = async (slug, authtoken) => {
-  await axios.put(`${process.env.REACT_APP_APT}/${slug}`, {
+export const updateCategory = async (slug, category, authtoken) =>
+  await axios.put(`${process.env.REACT_APP_API}/category/${slug}`, {
     headers: {
       authtoken,
     },
   });
-};
-// create category by name
-export const createCategory = async (category, authtoken) => {
-    await axios.put(`${process.env.REACT_APP_APT}/categirory`,category ,{
-      headers: {
-        authtoken,
-      },
-    });
-  };
 
+export const createCategory = async (category, authtoken) =>
+  await axios.post(`${process.env.REACT_APP_API}/category`, category, {
+    headers: {
+      authtoken,
+    },
+  });

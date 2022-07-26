@@ -12,7 +12,7 @@ const Register = () => {
   
   useEffect(() => {
     if (user && user.token) navigate("/");
-  }, [user]);
+  }, [user,navigate]);
 
   const handleSumit = async (e) => {
     e.preventDefault();

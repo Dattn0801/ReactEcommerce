@@ -4,8 +4,8 @@ import { auth } from "../../firebase";
 import {
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
+import {  useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -14,7 +14,7 @@ const ForgotPassword = () => {
   let navigate = useNavigate();
   useEffect(() => {
     if (user && user.token) navigate("/");
-  }, [user]);
+  }, [user,navigate]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);

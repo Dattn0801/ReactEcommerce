@@ -13,7 +13,7 @@ const LoadingToRedirect = () => {
     count === 0 && navigate("/");
     //clean up
     return () => clearInterval(interval);
-  }, [count]);
+  }, [count, navigate]);
   return (
     <div className="container p-5 text-center">
       <p>Bạn chưa đăng nhập, điều hướng sau {count} giây</p>

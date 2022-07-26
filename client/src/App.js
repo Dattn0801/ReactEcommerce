@@ -14,6 +14,7 @@ import Password from "./pages/user/Password";
 import Wishlist from "./pages/user/Wishlist";
 //Dashboard
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import CategoryCreate from "./pages/admin/category/CategoryCreate";
 //Private Routes
 import UserPrivateRoutes from "./components/routes/UserPrivateRoutes";
 //Admin Routes
@@ -74,6 +75,7 @@ const App = () => {
         </Route>
         <Route element={<AdminRoutes />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/category" element={<CategoryCreate />} />
         </Route>
       </Routes>
     </>

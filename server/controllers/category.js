@@ -3,10 +3,10 @@ const slugify = require("slugify");
 
 exports.create = async (req, res) => {
   try {
-    const { name} = req.body;
+    const { name } = req.body;
     res.json(await new Category({ name, slug: slugify(name) }).save());
   } catch (err) {
-    res.status(400).send("Create category failed");
+    res.status(400).send("Tạo danh mục thất bại");
   }
 };
 

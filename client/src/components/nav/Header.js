@@ -42,8 +42,17 @@ const Header = () => {
           icon={<SettingOutlined />}
           title={user.name && user.name.split("@")[0]}
         >
-          <Menu.Item key="setting:1">Option 1</Menu.Item>
-          <Menu.Item key="setting:2">Option 2</Menu.Item>
+          {user && user.role === "subcriber" && (
+            <Menu.Item>
+              <Link to="user/history">Dashboard</Link>
+            </Menu.Item>
+          )}
+          {user && user.role === "admin" && (
+            <Menu.Item>
+              <Link to="admin/dashboard">Dashboard</Link>
+            </Menu.Item>
+          )}
+
           <Menu.Item icon={<LoginOutlined />} onClick={logout}>
             Đăng xuất
           </Menu.Item>
