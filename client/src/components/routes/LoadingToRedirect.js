@@ -16,7 +16,7 @@ const LoadingToRedirect = () => {
   }, [count, navigate]);
   return (
     <div className="container p-5 text-center">
-      <p>Bạn chưa đăng nhập, điều hướng sau {count} giây</p>
+      <p>Get gô, điều hướng sau {count} giây</p>
     </div>
   );
 };

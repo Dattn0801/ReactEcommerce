@@ -9,11 +9,14 @@ import {
 } from "../../../functions/category";
 import { Link } from "react-router-dom";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import CategoryForm from "../../../components/forms/CategoryForm";
 const CategoryCreate = () => {
   const { user } = useSelector((state) => ({ ...state }));
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
+
+  const [keyword, setKeyword] = useState("");
 
   useEffect(() => {
     loadCategories();
@@ -52,23 +55,11 @@ const CategoryCreate = () => {
         });
     }
   };
-  const categoryForm = () => (
-    <form onSubmit={handleSumit}>
-      <div className="form-group">
-        <label>Tên danh mục</label>
-        <input
-          type="text"
-          className="form-control"
-          onChange={(e) => setName(e.target.value)}
-          value={name}
-          autoFocus
-          required
-        />
-        <br />
-        <button className="btn btn-outline-primary">Lưu</button>
-      </div>
-    </form>
-  );
+  const handleSearchChange = (e) => {
+    e.preventDefault();
+    setKeyword(e.target.value.toLowerCase());
+  };
+  const searched = (keyword) => (c) => c.name.toLowerCase().includes(keyword);
   return (
     <div className="container-fluid">
       <div className="row">
@@ -81,9 +72,20 @@ const CategoryCreate = () => {
           ) : (
             <h4>Tạo danh mục</h4>
           )}
-          {categoryForm()}
+          <CategoryForm
+            handleSumit={handleSumit}
+            name={name}
+            setName={setName}
+          />
+          <input
+            type="search"
+            placeholder="Lọc"
+            value={keyword}
+            onChange={handleSearchChange}
+            className="form-control mb-4"
+          />
           <hr />
-          {categories.map((c) => (
+          {categories.filter(searched(keyword)).map((c) => (
             <div className="alert alert-secondary" key={c._id}>
               {c.name}
               <span
