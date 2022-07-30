@@ -12,6 +12,7 @@ const CategoryUpdate = () => {
   const [loading, setLoading] = useState(false);
   let navigate = useNavigate();
   let { slug } = useParams();
+  
   useEffect(() => {
     loadCategory();
   }, []);

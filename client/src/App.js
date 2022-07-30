@@ -18,6 +18,7 @@ import CategoryCreate from "./pages/admin/category/CategoryCreate";
 import CategoryUpdate from "./pages/admin/category/CategoryUpdate";
 import SubCreate from "./pages/admin/sub/SubCreate";
 import SubUpdate from "./pages/admin/sub/SubUpdate";
+import ProductCreate from "./pages/admin/product/ProductCreate";
 //Private Routes
 import UserPrivateRoutes from "./components/routes/UserPrivateRoutes";
 //Admin Routes
@@ -82,6 +83,7 @@ const App = () => {
           <Route path="/admin/category/:slug" element={<CategoryUpdate />} />
           <Route path="/admin/sub" element={<SubCreate />} />
           <Route path="/admin/sub/:slug" element={<SubUpdate />} />
+          <Route path="/admin/product" element={<ProductCreate />} />
         </Route>
       </Routes>
     </>
