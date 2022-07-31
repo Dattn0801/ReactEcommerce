@@ -6,7 +6,7 @@ import { getCategories } from "../../../functions/category";
 import { createSub, getSubs, removeSub } from "../../../functions/sub";
 import { Link } from "react-router-dom";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import CategoryForm from "../../../components/forms/CategoryForm";
+import SubForm from "../../../components/forms/SubForm";
 import LocalSearch from "../../../components/forms/LocalSearch";
 const SubCreate = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -87,11 +87,7 @@ const SubCreate = () => {
             </select>
           </div>
 
-          <CategoryForm
-            handleSumit={handleSumit}
-            name={name}
-            setName={setName}
-          />
+          <SubForm handleSumit={handleSumit} name={name} setName={setName} />
           <LocalSearch keyword={keyword} setKeyword={setKeyword} />
           <hr />
           {subs.filter(searched(keyword)).map((c) => (

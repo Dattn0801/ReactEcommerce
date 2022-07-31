@@ -6,7 +6,7 @@ import { getSub, updateSub } from "../../../functions/sub";
 import { getCategories } from "../../../functions/category";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import CategoryForm from "../../../components/forms/CategoryForm";
+import SubForm from "../../../components/forms/SubForm";
 
 const SubUpdate = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -72,7 +72,7 @@ const SubUpdate = () => {
                 ))}
             </select>
           </div>
-          <CategoryForm
+          <SubForm
             handleSumit={handleSumit}
             name={name}
             setName={setName}
