@@ -2,17 +2,9 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import AdminNav from "../../../components/nav/AdminNav";
-import {
-  createCategory,
-  getCategories,
-  removeCategory,
-} from "../../../functions/category";
-import { Link } from "react-router-dom";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import CategoryForm from "../../../components/forms/CategoryForm";
-import LocalSearch from "../../../components/forms/LocalSearch";
+import { getCategories, getCategorySub } from "../../../functions/category";
 import { createProduct } from "../../../functions/product";
-import ProductCreateForm from "../../../components/forms/ProductCreateForm"; 
+import ProductCreateForm from "../../../components/forms/ProductCreateForm";
 const initialState = {
   title: "",
   description: "",
@@ -30,7 +22,8 @@ const initialState = {
 };
 const ProductCreate = () => {
   const [values, setValues] = useState(initialState);
-
+  const [subOptions, setSubOptions] = useState([]);
+  const [showSub, setShowSub] = useState(false);
   //redux
   const { user } = useSelector((state) => ({ ...state }));
 
@@ -57,20 +50,34 @@ const ProductCreate = () => {
     setValues({ ...values, [e.target.name]: e.target.value });
     console.log(e.target.name, "-----", e.target.value);
   };
+  const handleCategoryChange = (e) => {
+    e.preventDefault();
+    console.log("CLICKED CATEGORY", e.target.value);
+    setValues({ ...values, subs: [], category: e.target.value });
+    getCategorySub(e.target.value).then((res) => {
+      console.log("SUB OPTIONS ON CATGORY CLICK", res);
+      setSubOptions(res.data);
+    });
+    setShowSub(true);
+  };
   return (
     <div className="container-fluid">
-      <div class="row">
+      <div className="row">
         <div className="col-md-2">
           <AdminNav />
         </div>
         <div className="col-md-10">
           <h4>Product create</h4>
           <hr />
-          {JSON.stringify(values.categories)}
+          {JSON.stringify(values.subs)}
           <ProductCreateForm
             handleSubmit={handleSubmit}
             handleChange={handleChange}
+            setValues={setValues}
             values={values}
+            handleCategoryChange={handleCategoryChange}
+            subOptions={subOptions}
+            showSub={showSub}
           />
         </div>
       </div>
