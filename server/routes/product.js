@@ -15,7 +15,7 @@ const {
 
 // routes
 router.post("/product", authCheck, adminCheck, create);
- router.get("/products", list);
+router.get("/products/:count", list);
 // router.get("/product/:slug", read);
 // router.put("/product/:slug", authCheck, adminCheck, update);
 // router.delete("/product/:slug", authCheck, adminCheck, remove);
