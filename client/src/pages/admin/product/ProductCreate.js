@@ -5,6 +5,9 @@ import AdminNav from "../../../components/nav/AdminNav";
 import { getCategories, getCategorySub } from "../../../functions/category";
 import { createProduct } from "../../../functions/product";
 import ProductCreateForm from "../../../components/forms/ProductCreateForm";
+import FileUpload from "../../../components/forms/FileUpload";
+import { LoadingOutlined } from "@ant-design/icons";
+
 const initialState = {
   title: "",
   description: "",
@@ -24,6 +27,7 @@ const ProductCreate = () => {
   const [values, setValues] = useState(initialState);
   const [subOptions, setSubOptions] = useState([]);
   const [showSub, setShowSub] = useState(false);
+  const [loading, setLoading] = useState(false);
   //redux
   const { user } = useSelector((state) => ({ ...state }));
 
@@ -67,9 +71,20 @@ const ProductCreate = () => {
           <AdminNav />
         </div>
         <div className="col-md-10">
-          <h4>Product create</h4>
+          {loading ? (
+            <LoadingOutlined style={{ fontSize: "36px", color: "#08c" }} />
+          ) : (
+            <h4>Tạo sản phẩm</h4>
+          )}
           <hr />
-          {JSON.stringify(values.subs)}
+          {JSON.stringify(values.images)}
+          <div>
+            <FileUpload
+              values={values}
+              setValues={setValues}
+              setLoading={setLoading}
+            />
+          </div>
           <ProductCreateForm
             handleSubmit={handleSubmit}
             handleChange={handleChange}

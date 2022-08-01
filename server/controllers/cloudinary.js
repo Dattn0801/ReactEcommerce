@@ -19,7 +19,7 @@ exports.upload = async (req, res) => {
 exports.remove = (req, res) => {
   let image_id = req.body.public_id;
   cloudinary.uploader.destroy(image_id, (err, result) => {
-    if (err) return res.json({ sucess: flase, err });
+    if (err) return res.json({ sucess: false, err });
     res.send("ok");
   });
 };

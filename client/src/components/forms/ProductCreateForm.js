@@ -141,7 +141,7 @@ const ProductCreateForm = ({
       )}
 
       <br />
-      <button class="btn btn-primary">Lưu</button>
+      <button className="btn btn-primary">Lưu</button>
     </form>
   );
 };
