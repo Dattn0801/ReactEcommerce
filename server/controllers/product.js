@@ -20,4 +20,22 @@ exports.list = async (req, res) => {
     .exec();
   res.json(products);
 };
+exports.read = async (req, res) => {
+  let product = await Product.findOne({ slug: req.params.slug })
+    .populate("category")
+    .populate("subs")
+    .exec();
+  res.json(product);
+};
 
+exports.remove = async function (req, res) {
+  try {
+    const deleted = await Product.findOneAndRemove({
+      slug: req.params.slug,
+    }).exec();
+    res.json(deleted);
+  } catch (err) {
+    console.log(err);
+    res.status(400).send("Xóa thất bại");
+  }
+};
