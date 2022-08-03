@@ -11,7 +11,7 @@ exports.create = async (req, res) => {
     res.status(400).send("Tạo sản phẩm thất bại");
   }
 };
-exports.list = async (req, res) => {
+exports.listAll = async (req, res) => {
   let products = await Product.find({})
     .limit(parseInt(req.params.count))
     .populate("category")
@@ -53,5 +53,20 @@ exports.remove = async function (req, res) {
   } catch (err) {
     console.log(err);
     res.status(400).send("Xóa thất bại");
+  }
+};
+exports.list = async (req, res) => {
+  try {
+    // createdAt/updateAt, desc/asc, 3
+    const { sort, order, limit } = req.body;
+    const products = await Product.find({})
+      .populate("category")
+      .populate("subs")
+      .sort([[sort, order]])
+      .limit(limit)
+      .exec(); 
+    res.json(products);
+  } catch (err) {
+    console.log(err);
   }
 };
