@@ -3,16 +3,18 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import AdminNav from "../../../components/nav/AdminNav";
 import { getCategories, getCategorySub } from "../../../functions/category";
-import { createProduct } from "../../../functions/product";
+import { updateProduct, getProduct } from "../../../functions/product";
 import ProductCreateForm from "../../../components/forms/ProductCreateForm";
 import FileUpload from "../../../components/forms/FileUpload";
 import { LoadingOutlined } from "@ant-design/icons";
+import { useParams } from "react-router-dom";
+import ProductUpdateForm from "../../../components/forms/ProductUpdateForm";
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
   title: "",
   description: "",
   price: "",
-  categories: [],
   category: "",
   subs: [],
   shipping: "",
@@ -24,45 +26,76 @@ const initialState = {
   brand: "",
 };
 const ProductUpdate = () => {
+  // state
   const [values, setValues] = useState(initialState);
+  const [categories, setCategories] = useState([]);
   const [subOptions, setSubOptions] = useState([]);
-  const [showSub, setShowSub] = useState(false);
+  const [arrayOfSubs, setArrayOfSubs] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [loading, setLoading] = useState(false);
+  let navigate = useNavigate();
   //redux
   const { user } = useSelector((state) => ({ ...state }));
-
+  //router
+  let { slug } = useParams();
   useEffect(() => {
+    loadProduct();
     loadCategories();
   }, []);
-  const loadCategories = () =>
-    getCategories().then((c) => setValues({ ...values, categories: c.data }));
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    createProduct(values, user.token)
+  const loadProduct = () => {
+    getProduct(slug)
       .then((res) => {
-        console.log(res);
-        toast.success(`${res.data.title} is created`);
-        window.location.reload();
+        setValues({ ...values, ...res.data });
+        getCategorySub(res.data.category._id).then((res) => {
+          setSubOptions(res.data);
+        });
+        let arr = [];
+        res.data.subs.map((s) => {
+          arr.push(s._id);
+        });
+        setArrayOfSubs(arr);
       })
-      .catch((err) => {
-        console.log(err);
-        if (err.response.status === 400) toast.error(err.response.data);
-      });
+      .catch((err) => {});
   };
+
+  const loadCategories = () =>
+    getCategories().then((c) => {
+      setCategories(c.data);
+    });
+
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
-    console.log(e.target.name, "-----", e.target.value);
   };
   const handleCategoryChange = (e) => {
     e.preventDefault();
-    console.log("CLICKED CATEGORY", e.target.value);
-    setValues({ ...values, subs: [], category: e.target.value });
+    setValues({ ...values, subs: [] });
+    setSelectedCategory(e.target.value);
     getCategorySub(e.target.value).then((res) => {
-      console.log("SUB OPTIONS ON CATGORY CLICK", res);
       setSubOptions(res.data);
     });
-    setShowSub(true);
+    //user click back to original category
+    if (values.category._id === e.target.value) {
+      loadProduct();
+    }
+    //clear sub category
+    setArrayOfSubs([]);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    values.subs = arrayOfSubs;
+    values.category = selectedCategory ? selectedCategory : values.category;
+    updateProduct(slug, values, user.token)
+      .then((res) => {
+        setLoading(false);
+        toast.success(`"${res.data.title}" đã cập nhật`);
+        navigate("/admin/products");
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+        toast.error(err.response.data.err);
+      });
   };
   return (
     <div className="container-fluid">
@@ -77,22 +110,26 @@ const ProductUpdate = () => {
             <h4>Chỉnh sửa sản phẩm</h4>
           )}
           <hr />
-          {JSON.stringify(values.images)}
-          <div>
-            <FileUpload
-              values={values}
-              setValues={setValues}
-              setLoading={setLoading}
-            />
-          </div>
-          <ProductCreateForm
+          {/* {JSON.stringify(values.images)} */}
+
+          <FileUpload
+            values={values}
+            setValues={setValues}
+            setLoading={setLoading}
+          />
+
+          {/* {JSON.stringify(values)} */}
+          <ProductUpdateForm
             handleSubmit={handleSubmit}
             handleChange={handleChange}
             setValues={setValues}
             values={values}
             handleCategoryChange={handleCategoryChange}
+            categories={categories}
             subOptions={subOptions}
-            showSub={showSub}
+            arrayOfSubs={arrayOfSubs}
+            setArrayOfSubs={setArrayOfSubs}
+            selectedCategory={selectedCategory}
           />
         </div>
       </div>

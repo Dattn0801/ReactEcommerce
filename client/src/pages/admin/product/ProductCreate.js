@@ -52,7 +52,7 @@ const ProductCreate = () => {
   };
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
-    console.log(e.target.name, "-----", e.target.value);
+    //console.log(e.target.name, "-----", e.target.value);
   };
   const handleCategoryChange = (e) => {
     e.preventDefault();
@@ -77,7 +77,7 @@ const ProductCreate = () => {
             <h4>Tạo sản phẩm</h4>
           )}
           <hr />
-          {JSON.stringify(values.images)}
+          {/* {JSON.stringify(values.images)} */}
           <div>
             <FileUpload
               values={values}

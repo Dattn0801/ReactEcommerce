@@ -27,6 +27,22 @@ exports.read = async (req, res) => {
     .exec();
   res.json(product);
 };
+exports.update = async (req, res) => {
+  try {
+    if (req.body.tilte) {
+      req.body.slug = slugify(req.body.tilte);
+    }
+    const updated = await Product.findOneAndUpdate(
+      { slug: req.params.slug },
+      req.body,
+      { new: true }
+    ).exec();
+    res.json(updated);
+  } catch (err) {
+    console.log("product update eror", err);
+    return res.status(400).send("Cập nhật sản phẩm thất bại");
+  }
+};
 
 exports.remove = async function (req, res) {
   try {

@@ -37,7 +37,6 @@ const FileUpload = ({ values, setValues, setLoading }) => {
                 console.log("image upload res data", res);
                 allUplloadFiles.push(res.data);
                 setValues({ ...values, images: allUplloadFiles });
-                
               })
               .catch((err) => {
                 setLoading(false);
@@ -96,14 +95,19 @@ const FileUpload = ({ values, setValues, setLoading }) => {
           ))}
       </div>
       <div className="row">
-        <div className="col-md-3"></div>
-        <label>Chọn file</label>
-        <input
-          type="file"
-          multiple
-          accept="images/*"
-          onChange={fileUploadAndResize}
-        />
+        <label
+          className="btn btn-primary btn-raised ml-3"
+          style={{ width: 100 }}
+        >
+          Chọn file
+          <input
+            type="file"
+            multiple
+            hidden
+            accept="images/*"
+            onChange={fileUploadAndResize}
+          />
+        </label>
       </div>
     </>
   );
