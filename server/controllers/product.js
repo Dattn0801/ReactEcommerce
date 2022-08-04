@@ -55,15 +55,39 @@ exports.remove = async function (req, res) {
     res.status(400).send("Xóa thất bại");
   }
 };
+
+// without pagination
+// exports.list = async (req, res) => {
+//   try {
+//     // createdAt/updateAt, desc/asc, 3
+//     const { sort, order, limit } = req.body;
+//     const products = await Product.find({})
+//       .populate("category")
+//       .populate("subs")
+//       .sort([[sort, order]])
+//       .limit(limit)
+//       .exec();
+//     res.json(products);
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
+
+// with pagination
 exports.list = async (req, res) => {
+  console.table(req.body);
   try {
     // createdAt/updateAt, desc/asc, 3
-    const { sort, order, limit } = req.body;
+    const { sort, order, page } = req.body;
+    const currentPage = page || 1;
+    const perPage = 4;
+
     const products = await Product.find({})
+      .skip((currentPage - 1) * perPage)
       .populate("category")
       .populate("subs")
       .sort([[sort, order]])
-      .limit(limit)
+      .limit(perPage)
       .exec();
     res.json(products);
   } catch (err) {
