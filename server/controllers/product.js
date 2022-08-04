@@ -64,9 +64,13 @@ exports.list = async (req, res) => {
       .populate("subs")
       .sort([[sort, order]])
       .limit(limit)
-      .exec(); 
+      .exec();
     res.json(products);
   } catch (err) {
     console.log(err);
   }
+};
+exports.productsCount = async (req, res) => {
+  let total = await Product.countDocuments({}).exec();
+  res.json(total);
 };
