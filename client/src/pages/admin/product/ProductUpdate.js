@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import AdminNav from "../../../components/nav/AdminNav";
 import { getCategories, getCategorySub } from "../../../functions/category";
 import { updateProduct, getProduct } from "../../../functions/product";
-import ProductCreateForm from "../../../components/forms/ProductCreateForm";
 import FileUpload from "../../../components/forms/FileUpload";
 import { LoadingOutlined } from "@ant-design/icons";
-import { useParams } from "react-router-dom";
 import ProductUpdateForm from "../../../components/forms/ProductUpdateForm";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const initialState = {
   title: "",

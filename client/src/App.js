@@ -21,6 +21,7 @@ import SubUpdate from "./pages/admin/sub/SubUpdate";
 import ProductCreate from "./pages/admin/product/ProductCreate";
 import ProductList from "./pages/admin/product/ProductList";
 import ProductUpdate from "./pages/admin/product/ProductUpdate";
+import Product from "./pages/Product";
 //Private Routes
 import UserPrivateRoutes from "./components/routes/UserPrivateRoutes";
 //Admin Routes
@@ -74,6 +75,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/register/complete" element={<RegisterComplete />} />
         <Route path="/forgot/password" element={<ForgotPassword />} />
+        <Route path="/product/:slug" element={<Product />} />
         <Route element={<UserPrivateRoutes />}>
           <Route path="/user/history" element={<History />} />
           <Route path="/user/password" element={<Password />} />
