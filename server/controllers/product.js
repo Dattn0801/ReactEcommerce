@@ -75,7 +75,7 @@ exports.remove = async function (req, res) {
 
 // with pagination
 exports.list = async (req, res) => {
-  console.table(req.body);
+  //console.table(req.body);
   try {
     // createdAt/updateAt, desc/asc, 3
     const { sort, order, page } = req.body;
@@ -97,4 +97,38 @@ exports.list = async (req, res) => {
 exports.productsCount = async (req, res) => {
   let total = await Product.countDocuments({}).exec();
   res.json(total);
+};
+
+// Đánh giá sản phẩm
+exports.productStart = async (req, res) => {
+  const product = await Product.findById(req.params.productId).exec();
+  const user = await User.findOne({ email: req.params.email }).exec();
+  const { start } = req.body;
+  // kiểm tra xem user có rating chưa
+  let existingRatingObject = product.ratings.find(
+    (userRating) => userRating.postedBy.toString() === user._id.toString()
+  );
+  //Nếu user chưa rating, rating
+  if (existingRatingObject === undefined) {
+    let ratingAdded = await Product.findByIdAndUpdate(
+      product._id,
+      {
+        $push: { ratings: { start: start, postedBy: user._id } },
+      },
+      { new: true }
+    ).exec();
+    console.log("ratingaded", ratingAdded);
+    res.json(ratingAdded);
+  } else {
+    // nếu user rating rồi, update rating
+    const ratingUpdated = await Product.updateOne(
+      {
+        ratings: { $elemMatch: existingRatingObject },
+      },
+      { $set: { "ratings.$.start": start } },
+      { new: true }
+    ).exec();
+    console.log("updated", ratingUpdated);
+    res.json(ratingUpdated);
+  }
 };
