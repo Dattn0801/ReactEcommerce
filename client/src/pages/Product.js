@@ -1,16 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { getProduct } from "../functions/product";
+import { getProduct, productStart } from "../functions/product";
 import { useParams } from "react-router-dom";
 import SingleProduct from "../components/cards/SingleProduct";
+import { useSelector } from "react-redux";
+
 const Product = () => {
   const [product, setProduct] = useState({});
-  const [loading, setLoading] = useState(true);
-
+  const [star, setStart] = useState(0);
+  //redux
+  const { user } = useSelector((state) => ({ ...state }));
   const { slug } = useParams();
   useEffect(() => {
     loadSingleProduct();
   }, [slug]);
-
+  const onStarClick = (newRating, name) => {
+    setStart(newRating);
+    // name is productId
+    productStart(name, star, user.token).then((res) => {
+      console.log("rating click", res.data);
+      loadSingleProduct(); // show updated rating real time
+    });
+  };
   const loadSingleProduct = () => {
     getProduct(slug).then((res) => setProduct(res.data));
   };
@@ -18,7 +28,11 @@ const Product = () => {
     <>
       <div className="container-fluid">
         <div className="row pt-4">
-          <SingleProduct product={product} />
+          <SingleProduct
+            product={product}
+            onStarClick={onStarClick}
+            star={star}
+          />
         </div>
         <div className="row">
           <div className="col text-center pt-5 pb-5">

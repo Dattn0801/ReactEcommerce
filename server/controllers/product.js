@@ -1,5 +1,7 @@
 const Product = require("../models/product");
+const User = require("../models/user");
 const slugify = require("slugify");
+
 exports.create = async (req, res) => {
   try {
     console.log(req.body);
@@ -102,7 +104,7 @@ exports.productsCount = async (req, res) => {
 // Đánh giá sản phẩm
 exports.productStart = async (req, res) => {
   const product = await Product.findById(req.params.productId).exec();
-  const user = await User.findOne({ email: req.params.email }).exec();
+  const user = await User.findOne({ email: req.user.email }).exec();
   const { start } = req.body;
   // kiểm tra xem user có rating chưa
   let existingRatingObject = product.ratings.find(

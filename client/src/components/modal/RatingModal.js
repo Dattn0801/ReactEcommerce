@@ -11,7 +11,6 @@ const RatingModal = ({ children }) => {
 
   let navigate = useNavigate();
   let params = useParams();
-  console.log(params.slug);
   const handleModal = () => {
     if (user && user.token) {
       setModalVisible(true);

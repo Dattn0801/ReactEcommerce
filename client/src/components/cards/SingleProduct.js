@@ -9,7 +9,7 @@ import StarRatings from "react-star-ratings";
 import RatingModal from "../modal/RatingModal";
 const { Meta } = Card;
 const { TabPane } = Tabs;
-const SingleProduct = ({ product }) => {
+const SingleProduct = ({ product, onStarClick, star }) => {
   const { _id, title, description, images, slug } = product;
   return (
     <>
@@ -49,10 +49,8 @@ const SingleProduct = ({ product }) => {
               <StarRatings
                 name={_id}
                 numberOfStars={5}
-                rating={2}
-                changeRating={(newRating, name) =>
-                  console.log("newRating", newRating, "name", name)
-                }
+                rating={star}
+                changeRating={onStarClick}
                 isSelectable={true}
                 starRateColor="red"
               />

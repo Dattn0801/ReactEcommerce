@@ -25,6 +25,6 @@ router.put("/product/:slug", authCheck, adminCheck, update);
 router.delete("/product/:slug", authCheck, adminCheck, remove);
 router.post("/products", list);
 //rating
-router.put("/product/start/:productId", authCheck, productStart);
+router.put("/product/star/:productId", authCheck, productStart);
 
 module.exports = router;
