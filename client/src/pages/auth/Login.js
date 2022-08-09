@@ -9,10 +9,10 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation, useParams } from "react-router-dom";
 import createOrUpdateUser from "../../functions/auth";
 
-const Login = () => {
+const Login = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -20,23 +20,29 @@ const Login = () => {
   let navigate = useNavigate();
   let dispatch = useDispatch();
   const { user } = useSelector((state) => ({ ...state }));
-
+  const location = useLocation();
   const roleBaseRedirect = (res) => {
-    if (res.data.role === "admin") {
-      console.log(res.data.role);
-      navigate("/admin/dashboard");
+    const intended = location.state;
+    if (intended) {
+      navigate(`/${intended.from}`);
     } else {
-      navigate("/user/history");
+      if (res.data.role === "admin") {
+        console.log(res.data.role);
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/user/history");
+      }
     }
   };
   useEffect(() => {
+    let intended = location.state;
+    if (intended) return;
     if (user && user.token) return;
   }, [user]);
 
   const handleSumit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       const { user } = result;
