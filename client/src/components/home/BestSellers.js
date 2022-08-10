@@ -3,6 +3,7 @@ import { getProductCount, getProducts } from "../../functions/product";
 import ProductCard from "../cards/ProductCard";
 import LoadingCard from "../cards/LoadingCard";
 import { Pagination } from "antd";
+import showAverage from "../../functions/rating";
 
 const BestSellers = () => {
   const [products, setProducts] = useState([]);

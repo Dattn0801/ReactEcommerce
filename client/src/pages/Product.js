@@ -13,6 +13,15 @@ const Product = () => {
   useEffect(() => {
     loadSingleProduct();
   }, [slug]);
+  useEffect(() => {
+    if (product.ratings && user) {
+      let existingRatingObject = product.ratings.find(
+        (element) => element.postedBy?.toString() === user.postedBy?.toString()
+      );
+      // current user star
+      existingRatingObject && setStart(existingRatingObject);
+    }
+  });
   const onStarClick = (newRating, name) => {
     setStart(newRating);
     // name is productId
