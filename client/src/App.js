@@ -12,6 +12,7 @@ import Header from "./components/nav/Header";
 import History from "./pages/user/History";
 import Password from "./pages/user/Password";
 import Wishlist from "./pages/user/Wishlist";
+import CategoryHome from "./pages/category/CategoryHome";
 //Dashboard
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import CategoryCreate from "./pages/admin/category/CategoryCreate";
@@ -76,6 +77,7 @@ const App = () => {
         <Route path="/register/complete" element={<RegisterComplete />} />
         <Route path="/forgot/password" element={<ForgotPassword />} />
         <Route path="/product/:slug" element={<Product />} />
+        <Route path="/category/:slug" element={<CategoryHome />} />
         <Route element={<UserPrivateRoutes />}>
           <Route path="/user/history" element={<History />} />
           <Route path="/user/password" element={<Password />} />
