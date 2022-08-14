@@ -4,6 +4,7 @@ import ProductCard from "../components/cards/ProductCard";
 import LoadingCard from "../components/cards/LoadingCard";
 import NewArrival from "../components/home/NewArrivals";
 import BestSellers from "../components/home/BestSellers";
+import CategoryList from "../components/category/CategoryList";
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -31,6 +32,8 @@ const Home = () => {
         Sản phẩm bán chạy
       </h4>
       <BestSellers />
+
+      <CategoryList />
     </>
   );
 };
