@@ -42,6 +42,7 @@ const ProductCard = ({ product }) => {
           <div className="text-left pt-1">Hiện tại chưa có đánh giá</div>
         )}
       </Card>
+      <br />
     </>
   );
 };
