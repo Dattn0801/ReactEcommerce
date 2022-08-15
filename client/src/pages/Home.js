@@ -5,6 +5,7 @@ import LoadingCard from "../components/cards/LoadingCard";
 import NewArrival from "../components/home/NewArrivals";
 import BestSellers from "../components/home/BestSellers";
 import CategoryList from "../components/category/CategoryList";
+import SubList from "../components/subs/SubList";
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -34,6 +35,7 @@ const Home = () => {
       <BestSellers />
 
       <CategoryList />
+      <SubList />
     </>
   );
 };

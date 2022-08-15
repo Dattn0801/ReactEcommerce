@@ -28,7 +28,7 @@ const ProductDetail = ({ product }) => {
             Danh mục con{" "}
             {subs.map((s) => (
               <Link
-                to={`/subs/${s.slug}`}
+                to={`/sub/${s.slug}`}
                 key={s._id}
                 className="label label-default label-pill pull-xs-right"
               >
