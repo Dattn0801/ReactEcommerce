@@ -14,6 +14,7 @@ import Password from "./pages/user/Password";
 import Wishlist from "./pages/user/Wishlist";
 import CategoryHome from "./pages/category/CategoryHome";
 import SubHome from "./pages/sub/SubHome";
+import Shop from "./pages/Shop";
 //Dashboard
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import CategoryCreate from "./pages/admin/category/CategoryCreate";
@@ -80,6 +81,7 @@ const App = () => {
         <Route path="/product/:slug" element={<Product />} />
         <Route path="/category/:slug" element={<CategoryHome />} />
         <Route path="/sub/:slug" element={<SubHome />} />
+        <Route path="/shop" element={<Shop />} />
         <Route element={<UserPrivateRoutes />}>
           <Route path="/user/history" element={<History />} />
           <Route path="/user/password" element={<Password />} />
