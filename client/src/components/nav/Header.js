@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
+import Search from "../forms/Search";
 const Header = () => {
   const [current, setCurrent] = useState("home");
   let dispatch = useDispatch();
@@ -32,47 +32,48 @@ const Header = () => {
     navigate("/login");
   };
   return (
-    <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">
-      <Menu.Item key="home" icon={<AppstoreOutlined />}>
-        <Link to="/">Trang chủ</Link>
-      </Menu.Item>
+    <>
+      <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">
+        <Menu.Item key="home" icon={<AppstoreOutlined />}>
+          <Link to="/">Trang chủ</Link>
+        </Menu.Item>
 
-      {user && (
-        <Menu.SubMenu
-          icon={<SettingOutlined />}
-          title={user.name && user.name.split("@")[0]}
-        >
-          {user && user.role === "subcriber" && (
-            <Menu.Item>
-              <Link to="user/history">Dashboard</Link>
-            </Menu.Item>
-          )}
-          {user && user.role === "admin" && (
-            <Menu.Item>
-              <Link to="admin/dashboard">Dashboard</Link>
-            </Menu.Item>
-          )}
+        {user && (
+          <Menu.SubMenu
+            icon={<SettingOutlined />}
+            title={user.name && user.name.split("@")[0]}
+          >
+            {user && user.role === "subcriber" && (
+              <Menu.Item>
+                <Link to="user/history">Dashboard</Link>
+              </Menu.Item>
+            )}
+            {user && user.role === "admin" && (
+              <Menu.Item>
+                <Link to="admin/dashboard">Dashboard</Link>
+              </Menu.Item>
+            )}
 
-          <Menu.Item icon={<LoginOutlined />} onClick={logout}>
-            Đăng xuất
+            <Menu.Item icon={<LoginOutlined />} onClick={logout}>
+              Đăng xuất
+            </Menu.Item>
+          </Menu.SubMenu>
+        )}
+        {!user && (
+          <Menu.Item key="register" icon={<UserAddOutlined />}>
+            <Link to="/register">Đăng kí</Link>
           </Menu.Item>
-        </Menu.SubMenu>
-      )}
-      {!user && (
-        <Menu.Item
-          key="register"
-          icon={<UserAddOutlined />}
-          className="float-start"
-        >
-          <Link to="/register">Đăng kí</Link>
-        </Menu.Item>
-      )}
-      {!user && (
-        <Menu.Item key="login" icon={<UserOutlined />} className="float-right">
-          <Link to="/login">Đăng nhập</Link>
-        </Menu.Item>
-      )}
-    </Menu>
+        )}
+        {!user && (
+          <Menu.Item key="login" icon={<UserOutlined />}>
+            <Link to="/login">Đăng nhập</Link>
+          </Menu.Item>
+        )}
+        <span className="float-right p-1" style={{ marginLeft: "auto" }}>
+          <Search />
+        </span>
+      </Menu>
+    </>
   );
 };
 
