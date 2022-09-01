@@ -177,8 +177,20 @@ const handlePrice = async (req, res, price) => {
     console.log(err);
   }
 };
+const handleCategory = async (req, res, category) => {
+  try {
+    let products = await Product.find({ category })
+      .populate("category", "_id name")
+      .populate("subs", "_id name")
+      .populate("ratings.postedBy", "_id name")
+      .exec();
+    res.json(products);
+  } catch (err) {
+    console.log(err);
+  }
+};
 exports.searchFilters = async (req, res) => {
-  const { query, price } = req.body;
+  const { query, price, category } = req.body;
   if (query) {
     console.log("query-->", query);
     await handleQuery(req, res, query);
@@ -186,5 +198,9 @@ exports.searchFilters = async (req, res) => {
   if (price !== undefined) {
     console.log("price--->", price);
     await handlePrice(req, res, price);
+  }
+  if (category !== undefined) {
+    console.log("category--->", category);
+    await handleCategory(req, res, category);
   }
 };

@@ -8,7 +8,7 @@ const { Meta } = Card;
 
 const ProductCard = ({ product }) => {
   //destructure
-  const { title, description, images, slug, ratings } = product;
+  const { title, description, images, slug, ratings, price } = product;
   return (
     <>
       <Card
@@ -36,6 +36,10 @@ const ProductCard = ({ product }) => {
           title={title}
           description={`${description && description.substring(0, 40)}...`}
         />
+        <div className="pt-1">
+          <h6 className="text-danger">{`${price} vnđ`}</h6>
+        </div>
+
         {ratings && ratings.length > 0 ? (
           showAverage(product)
         ) : (
