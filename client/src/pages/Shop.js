@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { fetchProductsByFilter, getProductByCount } from "../functions/product";
+import { getSubs } from "../functions/sub";
 import { useSelector, useDispatch } from "react-redux";
 import ProductCard from "../components/cards/ProductCard";
 import { Menu, Slider, Checkbox } from "antd";
-import { DollarOutlined, DownSquareOutlined } from "@ant-design/icons";
+import {
+  StarOutlined,
+  DollarOutlined,
+  DownSquareOutlined,
+} from "@ant-design/icons";
 import { getCategories } from "../functions/category";
+import Star from "../components/forms/Star";
 const { SubMenu, ItemGroup } = Menu;
 const Shop = () => {
   const [products, setProducts] = useState([]);
@@ -16,9 +22,14 @@ const Shop = () => {
   let dispatch = useDispatch();
   const { search } = useSelector((state) => ({ ...state }));
   const { text } = search;
+  const [star, setStar] = useState("");
+  const [subs, setSubs] = useState([]);
+  const [sub, setSub] = useState("");
+
   useEffect(() => {
     loadAllProducts();
     loadAllCategories();
+    loadAllSubs();
   }, []);
   // 1 load product by default
   const loadAllProducts = () => {
@@ -35,7 +46,9 @@ const Shop = () => {
       setProducts(res.data);
     });
   };
-
+  const loadAllSubs = () => {
+    getSubs().then((res) => setSubs(res.data));
+  };
   // 2 load product by search input
   useEffect(() => {
     const delayed = setTimeout(() => {
@@ -56,7 +69,9 @@ const Shop = () => {
       payload: { text: "" },
     });
     setCategoryIds([]);
+    setStar("");
     setPrice(value);
+
     //delay
     setTimeout(() => {
       setOk(!ok);
@@ -89,6 +104,8 @@ const Shop = () => {
     });
     // clear price
     setPrice([0, 0]);
+    // clear star
+    setStar("");
     let inTheState = [...categoryIds];
     let justChecked = e.target.value;
     let foundInTheState = inTheState.indexOf(justChecked); // nếu có return index ko có return -1
@@ -104,13 +121,65 @@ const Shop = () => {
     //console.log(inTheState);
     fetchProducts({ category: inTheState });
   };
+
+  // 5. Show products by star ratings
+  const handleStarClick = (num) => {
+    // clear search text
+    dispatch({
+      type: "SEARCH_QUERY",
+      payload: { text: "" },
+    });
+    setPrice([0, 0]);
+    setCategoryIds([]);
+    setStar(num);
+    fetchProducts({ stars: num });
+  };
+  const showStar = () => (
+    <div className="pr-4 pl-4 pb-2">
+      <Star starClick={handleStarClick} numberOfStars={5} />
+      <Star starClick={handleStarClick} numberOfStars={4} />
+      <Star starClick={handleStarClick} numberOfStars={3} />
+      <Star starClick={handleStarClick} numberOfStars={2} />
+      <Star starClick={handleStarClick} numberOfStars={1} />
+    </div>
+  );
+
+  // 4. Load  product by subs categories
+
+  const showSubs = () =>
+    subs.map((s) => (
+      <div
+        key={s._id}
+        onClick={() => handleSub(s)}
+        className="p-1 m-1 badge badge-secondary"
+        style={{ cursor: "pointer" }}
+      >
+        {s.name}
+      </div>
+    ));
+  const handleSub = (sub) => {
+    //console.log("sub", s);
+    setSub(sub);
+    //reset
+
+    dispatch({
+      type: "SEARCH_QUERY",
+      payload: { text: "" },
+    });
+    setPrice([0, 0]);
+    setCategoryIds([]);
+    setStar("");
+
+    //fetproduct
+    fetchProducts({ sub }); //sub:sub
+  };
   return (
     <>
       <div className="container-fluid">
         <div className="row">
           <div className="col-md-3 pt-2">
             <h4>Search/filter</h4>
-            <Menu defaultOpenKeys={["1", "2"]} mode="inline">
+            <Menu defaultOpenKeys={["1", "2", "3", "4"]} mode="inline">
               {/* giá*/}
               <SubMenu
                 key="1"
@@ -147,6 +216,30 @@ const Shop = () => {
               >
                 <div>{showCategories()}</div>
               </SubMenu>
+              {/*sao*/}
+              <SubMenu
+                key="3"
+                title={
+                  <span className="h6">
+                    <StarOutlined />
+                    Đánh giá
+                  </span>
+                }
+              >
+                <div>{showStar()}</div>
+              </SubMenu>
+              {/*danh mục*/}
+              <SubMenu
+                key="4"
+                title={
+                  <span className="h6">
+                    <DownSquareOutlined style={{ paddingTop: "10px" }} />
+                    Danh mục con
+                  </span>
+                }
+              >
+                <div className="pl-4 pr-4">{showSubs()}</div>
+              </SubMenu>
             </Menu>
           </div>
           <div className="col-md-9 pt-2">
@@ -156,7 +249,7 @@ const Shop = () => {
               <h4 className="text-danger">Sản phẩm</h4>
             )}
             {products && products.length < 1 && (
-              <p> Không tìm thấy sản phẩm với từ khóa {text}</p>
+              <p> Không tìm thấy sản phẩm {text}</p>
             )}
             <div className="row">
               {products.map((p) => (
