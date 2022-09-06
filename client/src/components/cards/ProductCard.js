@@ -1,12 +1,34 @@
-import React from "react";
-import { Card, Skeleton } from "antd";
+import React, { useState, useEffect } from "react";
+import { Card, Tooltip } from "antd";
 import { EyeOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import showAverage from "../../functions/rating";
-
+import _ from "lodash";
 const { Meta } = Card;
 
 const ProductCard = ({ product }) => {
+  const [tooltip, setTooltip] = useState("Click to add");
+  const handleAddToCart = () => {
+    //create card array
+    let cart = [];
+    //window object available
+    if (typeof window !== "undefined") {
+      // if cart in local storage
+      if (localStorage.getItem("cart")) {
+        cart = JSON.parse(localStorage.getItem("cart"));
+      }
+      // push new product to cart
+      cart.push({
+        ...product,
+        count: 1,
+      });
+      //remove duplicates
+      let unique = _.uniqWith(cart, _.isEqual);
+      //save to local storage
+      localStorage.setItem("cart", JSON.stringify(unique));
+      setTooltip("Added");
+    }
+  };
   //destructure
   const { title, description, images, slug, ratings, price } = product;
   return (
@@ -25,11 +47,14 @@ const ProductCard = ({ product }) => {
             <br />
             Xem sản phẩm
           </Link>,
-          <>
-            <ShoppingCartOutlined className="text-danger" />
-            <br />
-            Thêm vào giỏ
-          </>,
+          <Tooltip title={tooltip}>
+            <a onClick={handleAddToCart}>
+              <ShoppingCartOutlined className="text-danger" />
+              <br />
+              Thêm vào giỏ
+            </a>
+            ,
+          </Tooltip>,
         ]}
       >
         <Meta
