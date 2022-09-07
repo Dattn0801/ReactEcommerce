@@ -22,6 +22,12 @@ const Cart = () => {
         <div className="col-md-4">
           <h4>order summary</h4>
           <hr />
+          <p>Sản phẩm</p>
+          {cart.map((c, i) => {
+            <div key={i}>
+            <p></p>
+            </div>;
+          })}
           {user ? (
             <button className="btn btn-sm btn-primary mt-2"> Thanh toán</button>
           ) : (
