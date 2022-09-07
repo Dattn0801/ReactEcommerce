@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Card, Tooltip } from "antd";
 import { EyeOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -8,6 +9,10 @@ const { Meta } = Card;
 
 const ProductCard = ({ product }) => {
   const [tooltip, setTooltip] = useState("Click to add");
+
+  //redux
+  const { user, cart } = useSelector((state) => ({ ...state }));
+  const dispatch = useDispatch();
   const handleAddToCart = () => {
     //create card array
     let cart = [];
@@ -27,6 +32,12 @@ const ProductCard = ({ product }) => {
       //save to local storage
       localStorage.setItem("cart", JSON.stringify(unique));
       setTooltip("Added");
+
+      //add to redux state
+      dispatch({
+        type: "ADD_TO_CART",
+        payload: cart,
+      });
     }
   };
   //destructure

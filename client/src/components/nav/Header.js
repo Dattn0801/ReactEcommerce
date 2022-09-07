@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Menu } from "antd";
+import { Menu, Badge } from "antd";
 import {
   AppstoreOutlined,
   SettingOutlined,
   UserOutlined,
   UserAddOutlined,
   LoginOutlined,
+  ShoppingOutlined,
+  ShoppingCartOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
@@ -17,7 +19,7 @@ const Header = () => {
   const [current, setCurrent] = useState("home");
   let dispatch = useDispatch();
   let navigate = useNavigate();
-  let { user } = useSelector((state) => ({ ...state }));
+  let { user, cart } = useSelector((state) => ({ ...state }));
 
   const handleClick = (e) => {
     setCurrent(e.key);
@@ -37,6 +39,23 @@ const Header = () => {
         <Menu.Item key="home" icon={<AppstoreOutlined />}>
           <Link to="/">Trang chủ</Link>
         </Menu.Item>
+        <Menu.Item
+          key="shop"
+          icon={<ShoppingOutlined />}
+          style={{ float: "right" }}
+        >
+          <Link to="/shop">Shop</Link>
+        </Menu.Item>
+        <Menu.Item key="cart" icon={<ShoppingCartOutlined />}>
+          <Link to="/cart">
+            <Badge count={cart.length} offset={[9, 0]}>
+              Cart
+            </Badge>
+          </Link>
+        </Menu.Item>
+        <span className=" p-1" style={{ marginLeft: "auto" }}>
+          <Search />
+        </span>
 
         {user && (
           <Menu.SubMenu
@@ -69,9 +88,6 @@ const Header = () => {
             <Link to="/login">Đăng nhập</Link>
           </Menu.Item>
         )}
-        <span className="float-right p-1" style={{ marginLeft: "auto" }}>
-          <Search />
-        </span>
       </Menu>
     </>
   );
