@@ -24,6 +24,7 @@ const Cart = () => {
           <th scope="col">Thương hiệu</th>
           <th scope="col">Màu sắc</th>
           <th scope="col">Số lượng</th>
+          <th scope="col">Shipping</th>
           <th scope="col">Xóa </th>
         </tr>
       </thead>
