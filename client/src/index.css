@@ -17,3 +17,6 @@ code {
   height:450px;
   object-fit:cover;
 }
+.pointer{
+  cursor: pointer;
+}

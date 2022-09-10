@@ -25,7 +25,7 @@ const Cart = () => {
           <th scope="col">Màu sắc</th>
           <th scope="col">Số lượng</th>
           <th scope="col">Shipping</th>
-          <th scope="col">Xóa </th>
+          <th scope="col">Xóa</th>
         </tr>
       </thead>
       {cart.map((p) => (

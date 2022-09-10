@@ -5,6 +5,7 @@ import { EyeOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import showAverage from "../../functions/rating";
 import _ from "lodash";
+import { toast } from "react-toastify";
 const { Meta } = Card;
 
 const ProductCard = ({ product }) => {
@@ -36,8 +37,9 @@ const ProductCard = ({ product }) => {
       //add to redux state
       dispatch({
         type: "ADD_TO_CART",
-        payload: cart,
+        payload: unique,
       });
+      toast.success(`${product.title} đã thêm vào giỏ`);
     }
   };
   //destructure
