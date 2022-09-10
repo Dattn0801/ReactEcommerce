@@ -39,7 +39,13 @@ const ProductCard = ({ product }) => {
         type: "ADD_TO_CART",
         payload: unique,
       });
-      toast.success(`${product.title} đã thêm vào giỏ`);
+      //toast.success(`${product.title} đã thêm vào giỏ`);
+
+      //show cart in drawer
+      dispatch({
+        type: "SET_VISIBLE",
+        payload: true,
+      });
     }
   };
   //destructure

@@ -16,6 +16,7 @@ import CategoryHome from "./pages/category/CategoryHome";
 import SubHome from "./pages/sub/SubHome";
 import Shop from "./pages/Shop";
 import Cart from "./pages/Cart";
+import SideDrawer from "./components/drawer/SideDrawer";
 //Dashboard
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import CategoryCreate from "./pages/admin/category/CategoryCreate";
@@ -71,6 +72,7 @@ const App = () => {
   return (
     <>
       <Header />
+      <SideDrawer />
       <ToastContainer />
       <Routes>
         <Route path="*" element={<PageNotFound />} />
