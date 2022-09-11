@@ -17,6 +17,7 @@ import SubHome from "./pages/sub/SubHome";
 import Shop from "./pages/Shop";
 import Cart from "./pages/Cart";
 import SideDrawer from "./components/drawer/SideDrawer";
+import Checkout from "./pages/Checkout";
 //Dashboard
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import CategoryCreate from "./pages/admin/category/CategoryCreate";
@@ -90,6 +91,7 @@ const App = () => {
           <Route path="/user/history" element={<History />} />
           <Route path="/user/password" element={<Password />} />
           <Route path="/user/wishlist" element={<Wishlist />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Route>
         <Route element={<AdminRoutes />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />

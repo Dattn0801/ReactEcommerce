@@ -1,18 +1,26 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import ProductCardInCheckOut from "../components/cards/ProductCardInCheckOut";
 import ModalImage from "react-modal-image";
+import { useNavigate, Link } from "react-router-dom";
+import { userCart } from "../functions/user";
 const Cart = () => {
   const { cart, user } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
+  let navigate = useNavigate();
   const getTotal = () => {
     return cart.reduce((currentValue, nextValue) => {
       return currentValue + nextValue.count * nextValue.price;
     }, 0);
   };
   const saveOrderToDb = () => {
-    //
+    // console.log("cart", cart);
+    userCart(cart, user.token)
+      .then((res) => {
+        console.log("cart post res", res);
+        if (res.data.ok) navigate("/checkout");
+      })
+      .catch((err) => console.log("cart save err", err));
   };
   const showCartItems = () => (
     <table className="table table-borderless">
