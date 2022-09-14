@@ -18,6 +18,7 @@ import Shop from "./pages/Shop";
 import Cart from "./pages/Cart";
 import SideDrawer from "./components/drawer/SideDrawer";
 import Checkout from "./pages/Checkout";
+import Product from "./pages/Product";
 //Dashboard
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import CategoryCreate from "./pages/admin/category/CategoryCreate";
@@ -27,7 +28,7 @@ import SubUpdate from "./pages/admin/sub/SubUpdate";
 import ProductCreate from "./pages/admin/product/ProductCreate";
 import ProductList from "./pages/admin/product/ProductList";
 import ProductUpdate from "./pages/admin/product/ProductUpdate";
-import Product from "./pages/Product";
+import CreateCouponPage from "./pages/admin/coupon/CreateCoupon";
 //Private Routes
 import UserPrivateRoutes from "./components/routes/UserPrivateRoutes";
 //Admin Routes
@@ -102,6 +103,7 @@ const App = () => {
           <Route path="/admin/product" element={<ProductCreate />} />
           <Route path="/admin/products" element={<ProductList />} />
           <Route path="/admin/product/:slug" element={<ProductUpdate />} />
+          <Route path="/admin/coupon" element={<CreateCouponPage />} />
         </Route>
       </Routes>
     </>
