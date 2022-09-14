@@ -4,10 +4,12 @@ const slugify = require("slugify");
 
 exports.create = async (req, res) => {
   try {
-    const { name, expiry, discount } = req.body;
+    //console.log(req.body);
+    const { name, expiry, discount } = req.body.coupon;
     res.json(await new Coupon({ name, expiry, discount }).save());
+    console.log("ok");
   } catch (err) {
-    res.status(400).send("Tạo coupon thất bại");
+    console.log(err);
   }
 };
 
