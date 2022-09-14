@@ -16,3 +16,15 @@ export const getUserCart = async (authtoken) =>
       authtoken,
     },
   });
+
+//gửi put request to backend cần body nên gửi object rỗng
+export const emptyUserCart = async (authtoken) =>
+  await axios.put(
+    `${process.env.REACT_APP_API}/user/cart`,
+    {},
+    {
+      headers: {
+        authtoken,
+      },
+    }
+  );
