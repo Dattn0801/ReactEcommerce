@@ -7,5 +7,5 @@ const { authCheck } = require("../middlewares/auth");
 const { userCart, getuserCart } = require("../controllers/user");
 
 router.post("/user/cart", authCheck, userCart);
-router.get("user/cart", authCheck, getuserCart);
+router.get("/user/cart", authCheck, getuserCart);
 module.exports = router;
