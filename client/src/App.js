@@ -19,6 +19,8 @@ import Cart from "./pages/Cart";
 import SideDrawer from "./components/drawer/SideDrawer";
 import Checkout from "./pages/Checkout";
 import Product from "./pages/Product";
+import Payment from "./pages/Payment";
+
 //Dashboard
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import CategoryCreate from "./pages/admin/category/CategoryCreate";
@@ -45,6 +47,7 @@ import RegisterComplete from "./pages/auth/RegisterComplete";
 import { auth } from "./firebase";
 import { useDispatch } from "react-redux";
 import { currentUser } from "./functions/auth";
+
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -93,6 +96,7 @@ const App = () => {
           <Route path="/user/password" element={<Password />} />
           <Route path="/user/wishlist" element={<Wishlist />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/payment" element={<Payment />} />
         </Route>
         <Route element={<AdminRoutes />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
