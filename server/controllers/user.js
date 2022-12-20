@@ -80,12 +80,14 @@ exports.applyCouponToUserCart = async (req, res) => {
   //console.log("COUPON", coupon);
 
   const validCoupon = await Coupon.findOne({ name: coupon }).exec();
+  console.log(validCoupon);
   if (validCoupon === null) {
     return res.json({
       err: "Invalid coupon",
     });
   }
-  console.log("valid coupon", validCoupon);
+  //console.log("valid coupon", validCoupon);
+  //console.log("valid coupon", validCoupon.expiry);
   const user = await User.findOne({ email: req.user.email }).exec();
 
   let { products, cartTotal } = await Cart.findOne({ orderBy: user._id })
@@ -99,11 +101,12 @@ exports.applyCouponToUserCart = async (req, res) => {
     cartTotal -
     (cartTotal * validCoupon.discount) / 100
   ).toFixed(2); // 999.99231 => 99.99
+  console.log("----------> ", totalAfterDiscount);
 
   Cart.findOneAndUpdate(
     { orderBy: user._id },
     { totalAfterDiscount },
     { new: true }
-  );
+  ).exec();
   res.json(totalAfterDiscount);
 };

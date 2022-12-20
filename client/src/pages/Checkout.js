@@ -17,6 +17,7 @@ const Checkout = () => {
   const [address, setAddress] = useState("");
   const [addressSaved, setAddressSaved] = useState(false);
   const [coupon, setCoupon] = useState("");
+
   //discount price
   const [totalAfterDiscount, setTotalAfterDiscount] = useState(0);
   const [discountError, setDiscountError] = useState("");
@@ -29,8 +30,11 @@ const Checkout = () => {
       //console.log("user cart res", JSON.stringify(res.data, null, 4));
       setProducts(res.data.products);
       setTotal(res.data.cartTotal);
+      // 
+      setTotalAfterDiscount(res.data.totalAfterDiscount);
     });
   }, []);
+
   const emptyCart = () => {
     //remove from local storage
     if (typeof window !== "undefined") {
@@ -50,6 +54,7 @@ const Checkout = () => {
       toast.error("Giỏ hàng trống, tiếp tục mua sắm nèo :))) ");
     });
   };
+
   const saveAddressToDb = () => {
     //console.log(address)
     saveUserAddress(user.token, address).then((res) => {
@@ -69,6 +74,7 @@ const Checkout = () => {
       </button>
     </>
   );
+
   const showApplyCoupon = () => (
     <>
       <input
@@ -98,9 +104,9 @@ const Checkout = () => {
   const ApplyDiscountCoupon = () => {
     //console.log("send coupon to be", coupon);
     applyCoupon(user.token, coupon).then((res) => {
-      //console.log(res.data);
       if (res.data) {
         setTotalAfterDiscount(res.data);
+        console.log("total after discount", totalAfterDiscount);
         //update redux coupon applied true/false
         dispatch({
           type: "COUPON_APPLIED",
