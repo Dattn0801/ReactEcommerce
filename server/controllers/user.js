@@ -133,7 +133,7 @@ exports.createOrder = async (req, res) => {
     return {
       updateOne: {
         filter: { _id: item.product._id },
-        update: { $inc: { quantity: -item.count } },
+        update: { $inc: { quantity: -item.count, sold: +item.count } },
       },
     };
   });
