@@ -14,7 +14,7 @@ import { useSelector, useDispatch } from "react-redux";
 const { Meta } = Card;
 const { TabPane } = Tabs;
 const SingleProduct = ({ product, onStarClick, star }) => {
-  const { _id, title, description, images, slug } = product;
+  const { _id, title, description, images, slug, quantity } = product;
   const [tooltip, setTooltip] = useState("Click to add");
   //redux
   const { user, cart } = useSelector((state) => ({ ...state }));
@@ -81,11 +81,19 @@ const SingleProduct = ({ product, onStarClick, star }) => {
         )}
         <Card
           actions={[
-            <a onClick={handleAddToCart}>
-              <ShoppingCartOutlined className="text-danger" />
-              <br />
-              Thêm vào giỏ
-            </a>,
+            quantity < 1 ? (
+              <a>
+                <ShoppingCartOutlined className="text-danger" />
+                <br />
+                Hết hàng
+              </a>
+            ) : (
+              <a onClick={handleAddToCart}>
+                <ShoppingCartOutlined className="text-danger" />
+                <br />
+                Thêm vào giỏ
+              </a>
+            ),
             <Link to="/">
               <HeartOutlined className="text-info" />
               <br />

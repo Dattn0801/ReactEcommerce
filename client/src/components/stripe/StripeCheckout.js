@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useInsertionEffect } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useSelector, useDispatch } from "react-redux";
+import { createOrder, emptyUserCart } from "../../functions/user";
 import { createPaymentIntent } from "../../functions/stripe";
 import { Card } from "antd";
 import { DollarOutlined, CheckOutlined } from "@ant-design/icons";
@@ -25,7 +26,7 @@ const cartStyle = {
   },
 };
 const StripeCheckout = () => {
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
   const { user, coupon } = useSelector((state) => ({ ...state }));
 
   const [succeeded, setSucceeded] = useState(false);
@@ -70,6 +71,24 @@ const StripeCheckout = () => {
     } else {
       //get result after success
       //create order and save in database
+      createOrder(payload, user.token).then((res) => {
+        if (res.data.ok) {
+          // empty cart on local storage
+          if (typeof window !== "undefined") localStorage.removeItem("cart");
+          //empty cart from redux
+          dispatch({
+            type: "ADD_TO_CART",
+            payload: [],
+          });
+          //reset coupon to false
+          dispatch({
+            type: "COUPON_APPLIED",
+            payload: false,
+          });
+          //empty cart from database
+          emptyUserCart(user.token);
+        }
+      });
       //empty card in redux and local storage
       console.log(JSON.stringify(payload, null, 4));
       setError(null);

@@ -49,7 +49,8 @@ const ProductCard = ({ product }) => {
     }
   };
   //destructure
-  const { title, description, images, slug, ratings, price } = product;
+  const { title, description, images, slug, ratings, price, quantity } =
+    product;
   return (
     <>
       <Card
@@ -67,11 +68,19 @@ const ProductCard = ({ product }) => {
             Xem sản phẩm
           </Link>,
           <Tooltip title={tooltip}>
-            <a onClick={handleAddToCart}>
-              <ShoppingCartOutlined className="text-danger" />
-              <br />
-              Thêm vào giỏ
-            </a>
+            {quantity < 1 ? (
+              <a>
+                <ShoppingCartOutlined className="text-danger" />
+                <br />
+                Hết hàng
+              </a>
+            ) : (
+              <a onClick={handleAddToCart}>
+                <ShoppingCartOutlined className="text-danger" />
+                <br />
+                Thêm vào giỏ
+              </a>
+            )}
             ,
           </Tooltip>,
         ]}

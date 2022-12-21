@@ -207,6 +207,7 @@ const Shop = () => {
     brands.map((b) => (
       <>
         <Radio
+          key= {b}
           className="pb-1 pl-4 pr-4"
           value={b}
           name={b}
