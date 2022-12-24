@@ -11,7 +11,7 @@ const userShema = new mongoose.Schema(
     },
     role: {
       type: String,
-      default: "subscriber",
+      default: "subcriber",
     },
     cart: {
       type: Array,

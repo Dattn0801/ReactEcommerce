@@ -125,7 +125,7 @@ exports.createOrder = async (req, res) => {
   let newOrder = await new Order({
     products,
     paymentIntent,
-    orderdBy: user._id,
+    orderedBy: user._id,
   }).save();
 
   //decrement quantity, increment sold
@@ -142,4 +142,14 @@ exports.createOrder = async (req, res) => {
 
   console.log("NEW ORDER SAVED", newOrder);
   res.json({ ok: true });
+};
+
+exports.orders = async (req, res) => {
+  const user = await User.findOne({ email: req.user.email }).exec();
+
+  let userOrders = await Order.find({ orderedBy: user._id })
+    .populate("products.product")
+    .exec();
+  console.log(userOrders);
+  res.json(userOrders);
 };
