@@ -1,6 +1,7 @@
 import React from "react";
 
-const ShowPaymentInfo = ({ order }) => (
+//By default, it is true but pass value is value
+const ShowPaymentInfo = ({ order, showStatus = true }) => (
   <div>
     <p>
       <span>Order Id: {order.paymentIntent.id}</span>
@@ -25,11 +26,11 @@ const ShowPaymentInfo = ({ order }) => (
       </span>
       {" / "}
       <br />
-      {/* {showStatus && (
+      {showStatus && (
         <span className="badge bg-primary text-white">
           STATUS: {order.orderStatus}
         </span>
-      )} */}
+      )}
     </p>
   </div>
 );
