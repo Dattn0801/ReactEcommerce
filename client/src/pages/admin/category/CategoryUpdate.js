@@ -3,8 +3,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import AdminNav from "../../../components/nav/AdminNav";
 import { getCategory, updateCategory } from "../../../functions/category";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import CategoryForm from "../../../components/forms/CategoryForm";
 const CategoryUpdate = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -12,7 +11,7 @@ const CategoryUpdate = () => {
   const [loading, setLoading] = useState(false);
   let navigate = useNavigate();
   let { slug } = useParams();
-  
+
   useEffect(() => {
     loadCategory();
   }, []);

@@ -10,6 +10,9 @@ import RatingModal from "../modal/RatingModal";
 import showAverage from "../../functions/rating";
 import _ from "lodash";
 import { useSelector, useDispatch } from "react-redux";
+import { addToWishList, handleAddToWishlist } from "../../functions/user";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const { Meta } = Card;
 const { TabPane } = Tabs;
@@ -19,6 +22,7 @@ const SingleProduct = ({ product, onStarClick, star }) => {
   //redux
   const { user, cart } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
+  let navigate = useNavigate();
   const handleAddToCart = () => {
     //create card array
     let cart = [];
@@ -53,6 +57,16 @@ const SingleProduct = ({ product, onStarClick, star }) => {
       });
     }
   };
+
+  const handleAddToWishlist = (e) => {
+    e.preventDefault();
+    addToWishList(product._id, user.token).then((res) => {
+      console.log(res.data);
+      toast.success("Đã thêm sản phẩm vào mục yêu thích");
+      navigate("/user/wishlist");
+    });
+  };
+
   return (
     <>
       <div className="col-md-7">
@@ -94,11 +108,11 @@ const SingleProduct = ({ product, onStarClick, star }) => {
                 Thêm vào giỏ
               </a>
             ),
-            <Link to="/">
+            <a onClick={handleAddToWishlist}>
               <HeartOutlined className="text-info" />
               <br />
               Add to wishlist
-            </Link>,
+            </a>,
             <RatingModal>
               <StarRatings
                 name={_id}
