@@ -3,7 +3,7 @@ const Product = require("../models/product");
 const Cart = require("../models/cart");
 const Coupon = require("../models/coupon");
 const Order = require("../models/order");
-
+const uniqid = require("uniqid");
 exports.userCart = async (req, res) => {
   console.log(req.body);
   const { cart } = req.body;
@@ -130,6 +130,54 @@ exports.createOrder = async (req, res) => {
 
   //decrement quantity, increment sold
   let bulkOption = products.map((item) => {
+    return {
+      updateOne: {
+        filter: { _id: item.product._id },
+        update: { $inc: { quantity: -item.count, sold: +item.count } },
+      },
+    };
+  });
+  let updated = await Product.bulkWrite(bulkOption, {});
+  console.log("product quan--  &&  sold++", updated);
+
+  console.log("NEW ORDER SAVED", newOrder);
+  res.json({ ok: true });
+};
+
+exports.createCashOrder = async (req, res) => {
+  // console.log(req.body);
+  // return;
+  const { COD, couponApplied } = req.body;
+  if (!COD) return res.status(400).send("Create cash order failed");
+  //find user
+  const user = await User.findOne({ email: req.user.email }).exec();
+
+  let userCart = await Cart.findOne({ orderdBy: user._id }).exec();
+
+  let finalAmount = 0;
+  if (couponApplied && totalAfterDiscount) {
+    finalAmount = totalAfterDiscount; //
+  } else {
+    finalAmount = userCart.cartTotal;
+  }
+
+  // if dont have stripe response, admin error orders, self need modify payment intend
+  let newOrder = await new Order({
+    products: userCart.products,
+    paymentIntent: {
+      id: uniqid(),
+      amount: finalAmount,
+      currency: "vnd",
+      status: "Cash On Delivery",
+      created: Date.now(),
+      payment_method_types: ["cash"],
+    },
+    orderedBy: user._id,
+    status: "Cash On Delivery",
+  }).save();
+  console.log("idddddddddddddđ", newOrder.paymentIntent.id);
+  //decrement quantity, increment sold
+  let bulkOption = userCart.products.map((item) => {
     return {
       updateOne: {
         filter: { _id: item.product._id },

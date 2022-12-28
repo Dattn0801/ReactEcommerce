@@ -22,6 +22,19 @@ const Cart = () => {
       })
       .catch((err) => console.log("cart save err", err));
   };
+  const saveCashOrderToDb = () => {
+    // console.log("cart", cart);
+    dispatch({
+      type: "COD",
+      payload: true,
+    });
+    userCart(cart, user.token)
+      .then((res) => {
+        console.log("cart post res", res);
+        if (res.data.ok) navigate("/checkout");
+      })
+      .catch((err) => console.log("cart save err", err));
+  };
   const showCartItems = () => (
     <table className="table table-borderless">
       <thead className="thead-light">
@@ -72,14 +85,25 @@ const Cart = () => {
           Tổng tiền <b>${getTotal()}</b>
           <hr />
           {user ? (
-            <button
-              onClick={saveOrderToDb}
-              disabled={!cart.length}
-              className="btn btn-sm btn-primary mt-2"
-            >
-              {" "}
-              Thanh toán
-            </button>
+            <>
+              <button
+                onClick={saveOrderToDb}
+                disabled={!cart.length}
+                className="btn btn-sm btn-primary mt-2"
+              >
+                {" "}
+                Đặt hàng (Stripe)
+              </button>
+              <br />
+              <button
+                onClick={saveCashOrderToDb}
+                disabled={!cart.length}
+                className="btn btn-sm btn-primary mt-2"
+              >
+                {" "}
+                Đặt hàng
+              </button>
+            </>
           ) : (
             <button className="btn btn-sm btn-primary mt-2">
               <Link to="/login" state={{ from: "cart" }}>
