@@ -101,6 +101,7 @@ const Header = () => {
               {
                 label: "Đăng xuất",
                 onClick: logout,
+                icon: <LoginOutlined />,
               },
             ],
           },
@@ -110,6 +111,7 @@ const Header = () => {
                 Đăng kí
               </a>
             ),
+            icon: <UserAddOutlined />,
           },
           !user && {
             label: (
@@ -117,6 +119,7 @@ const Header = () => {
                 Đăng nhập
               </a>
             ),
+            icon: <UserOutlined />,
           },
         ]}
       ></Menu>
