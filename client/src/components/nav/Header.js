@@ -35,62 +35,92 @@ const Header = () => {
   };
   return (
     <>
-      <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">
-        <Menu.Item key="home" icon={<AppstoreOutlined />}>
-          <Link to="/">Trang chủ</Link>
-        </Menu.Item>
-        <Menu.Item
-          key="shop"
-          icon={<ShoppingOutlined />}
-          style={{ float: "right" }}
-        >
-          <Link to="/shop">Shop</Link>
-        </Menu.Item>
-        <Menu.Item key="cart" icon={<ShoppingCartOutlined />}>
-          <Link to="/cart">
-            <Badge count={cart.length} offset={[9, 0]}>
-              Cart
-            </Badge>
-          </Link>
-        </Menu.Item>
-        <span className=" p-1" style={{ marginLeft: "auto" }}>
-          <Search />
-        </span>
-
-        {user && (
-          <Menu.SubMenu
-            icon={<SettingOutlined />}
-            title={user.name && user.name.split("@")[0]}
-          >
-            {user && user.role === "subcriber" && (
-              <Menu.Item>
-                <Link to="user/history">Dashboard</Link>
-              </Menu.Item>
-            )}
-            {user && user.role === "admin" && (
-              <Menu.Item>
-                <Link to="admin/dashboard">Dashboard</Link>
-              </Menu.Item>
-            )}
-
-            <Menu.Item icon={<LoginOutlined />} onClick={logout}>
-              Đăng xuất
-            </Menu.Item>
-          </Menu.SubMenu>
-        )}
-        {!user && (
-          <Menu.Item key="register" icon={<UserAddOutlined />}>
-            <Link to="/register">Đăng kí</Link>
-          </Menu.Item>
-        )}
-        {!user && (
-          <Menu.Item key="login" icon={<UserOutlined />}>
-            <Link to="/login">Đăng nhập</Link>
-          </Menu.Item>
-        )}
-      </Menu>
+      <Menu
+        onClick={handleClick}
+        selectedKeys={[current]}
+        mode="horizontal"
+        items={[
+          {
+            label: (
+              <a href="/" rel="noopener noreferrer">
+                Trang chủ
+              </a>
+            ),
+            key: "home",
+            icon: <AppstoreOutlined />,
+          },
+          {
+            label: (
+              <a href="/shop" rel="noopener noreferrer">
+                Shop
+              </a>
+            ),
+            key: "shop",
+            icon: <ShoppingOutlined />,
+            style: { float: "right" },
+          },
+          {
+            label: (
+              <a href="/cart" rel="noopener noreferrer">
+                <Badge count={cart.length} offset={[9, 0]}>
+                  Cart
+                </Badge>
+              </a>
+            ),
+            key: "cart",
+            icon: <ShoppingOutlined />,
+            style: { float: "right" },
+          },
+          {
+            label: (
+              <span style={{ marginLeft: "auto" }}>
+                <Search />
+              </span>
+            ),
+          },
+          user && {
+            label: user.name && user.name.split("@")[0],
+            icon: <SettingOutlined />,
+            children: [
+              user &&
+                user.role === "subcriber" && {
+                  label: (
+                    <a href="/user/history" rel="noopener noreferrer">
+                      Dashboard User
+                    </a>
+                  ),
+                },
+              user &&
+                user.role === "admin" && {
+                  label: (
+                    <a href="/admin/dasboard" rel="noopener noreferrer">
+                      Dashboard Admin
+                    </a>
+                  ),
+                },
+              {
+                label: "Đăng xuất",
+                onClick: logout,
+              },
+            ],
+          },
+          !user && {
+            label: (
+              <a href="/register" rel="noopener noreferrer">
+                Đăng kí
+              </a>
+            ),
+          },
+          !user && {
+            label: (
+              <a href="/login" rel="noopener noreferrer">
+                Đăng nhập
+              </a>
+            ),
+          },
+        ]}
+      ></Menu>
     </>
   );
 };
-
 export default Header;
