@@ -9,7 +9,6 @@ import {
   ShoppingOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
 
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -77,6 +76,7 @@ const Header = () => {
                 <Search />
               </span>
             ),
+            key: "search",
           },
           user && {
             label: user.name && user.name.split("@")[0],
@@ -111,6 +111,7 @@ const Header = () => {
                 Đăng kí
               </a>
             ),
+
             icon: <UserAddOutlined />,
           },
           !user && {
