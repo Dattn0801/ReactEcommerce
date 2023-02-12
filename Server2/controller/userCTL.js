@@ -140,7 +140,7 @@ exports.deleteaUser = asyncHandler(async (req, res) => {
 // Update a user
 exports.updatedUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  validateMongoDbId(_id);
+  validateMongoDbId(id);
 
   try {
     const updatedUser = await User.findByIdAndUpdate(
