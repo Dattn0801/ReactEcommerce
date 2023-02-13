@@ -30,15 +30,23 @@ const {
 
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 
-router.post("/register", createUser);
+//login
 router.post("/login", loginUser);
 router.get("/logout", logout);
+
+//dashboard
 router.get("/all-users", getallUser);
+
+//refreshtoken
 router.get("/refresh", handleRefreshToken);
 
+//crud
+router.post("/register", createUser);
 router.get("/:id", authMiddleware, isAdmin, getaUser);
 router.delete("/:id", deleteaUser);
 router.put("/:id", authMiddleware, updatedUser);
+
+//block, unblock
 router.put("/block-user/:id", authMiddleware, isAdmin, blockUser);
 router.put("/unblock-user/:id", authMiddleware, isAdmin, unblockUser);
 

@@ -36,10 +36,10 @@ exports.updateProduct = asyncHandler(async (req, res) => {
 
 //delete
 exports.deleteProduct = asyncHandler(async (req, res) => {
-  const id = req.params;
+  const { id } = req.params;
   validateMongoDbId(id);
   try {
-    const deleteProduct = await Product.findOneAndDelete(id);
+    const deleteProduct = await Product.findByIdAndDelete(id);
     res.json(deleteProduct);
   } catch (error) {
     throw new Error(error);
@@ -62,7 +62,9 @@ exports.getaProduct = asyncHandler(async (req, res) => {
 
 exports.getAllProduct = asyncHandler(async (req, res) => {
   try {
-    const allProduct = await Product.find();
+    const allProduct = await Product.find({
+      brand: req.query.brand,
+    });
     res.json(allProduct);
   } catch (error) {
     throw new Error(error);
