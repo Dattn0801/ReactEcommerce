@@ -33,7 +33,7 @@ const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 //login
 router.post("/login", loginUser);
 router.get("/logout", logout);
-
+router.put("/password", authMiddleware, updatePassword);
 //dashboard
 router.get("/all-users", getallUser);
 
