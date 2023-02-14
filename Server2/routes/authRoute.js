@@ -38,6 +38,8 @@ router.get("/logout", logout);
 router.put("/password", authMiddleware, updatePassword);
 //forgotpass
 router.post("/forgot-password-token", forgotPasswordToken);
+//reset password
+router.put("/reset-password/:token", resetPassword);
 
 //dashboard
 router.get("/all-users", getallUser);
