@@ -53,8 +53,9 @@ exports.loginUser = asyncHandler(async (req, res) => {
     throw new Error("Invalid Credentials");
   }
 });
-// admin login
 
+
+// admin login
 exports.loginAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   // check if user exists or not
@@ -139,7 +140,6 @@ exports.getallUser = asyncHandler(async (req, res) => {
   }
 });
 
-//Get one user
 // Get a single user
 
 exports.getaUser = asyncHandler(async (req, res) => {

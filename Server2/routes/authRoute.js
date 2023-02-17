@@ -47,11 +47,16 @@ router.get("/all-users", getallUser);
 //refreshtoken
 router.get("/refresh", handleRefreshToken);
 
+//wishlist
+router.get("/wishlist", authMiddleware, getWishlist);
+//address
+router.put("/address", authMiddleware, isAdmin, saveAddress);
+
 //crud
 router.post("/register", createUser);
 router.get("/:id", authMiddleware, isAdmin, getaUser);
-router.delete("/:id", deleteaUser);
-router.put("/:id", authMiddleware, updatedUser);
+router.delete("/:id", authMiddleware, isAdmin, deleteaUser);
+router.put("/:id", authMiddleware, isAdmin, updatedUser);
 
 //block, unblock
 router.put("/block-user/:id", authMiddleware, isAdmin, blockUser);
