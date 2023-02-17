@@ -2,9 +2,12 @@ const Blog = require("../models/blogMD");
 const User = require("../models/userMD");
 const asyncHandler = require("express-async-handler");
 const validateMongoDbId = require("../utils/validateMongodbId");
-//const cloudinaryUploadImg = require("../utils/cloudinary");
-//const fs = require("fs");
+const fs = require("fs");
 
+const {
+  cloudinaryUploadImg,
+  cloudinaryDeleteImg,
+} = require("../utils/cloudinary");
 //create
 exports.createBlog = asyncHandler(async (req, res) => {
   try {
@@ -126,7 +129,7 @@ exports.disliketheBlog = asyncHandler(async (req, res) => {
   const blog = await Blog.findById(blogId);
   // find the login user
   const loginUserId = req?.user?._id;
-  // find if the user has liked the blog  
+  // find if the user has liked the blog
   const isDisLiked = blog?.isDisliked;
   // find if the user has disliked the blog
   const alreadyLiked = blog?.likes?.find(
