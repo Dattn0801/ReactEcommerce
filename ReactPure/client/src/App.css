@@ -57,6 +57,7 @@ a {
 .button:hover {
   background-color: var(--color-febd69);
   color: #131921;
+  transition: .5s;
 }
 /* Header Part */
 
