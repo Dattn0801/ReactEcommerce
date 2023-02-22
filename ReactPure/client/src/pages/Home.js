@@ -22,8 +22,10 @@ import brand5 from "../images/brand-05.png";
 import brand6 from "../images/brand-06.png";
 import brand7 from "../images/brand-07.png";
 import brand8 from "../images/brand-08.png";
-//
+
+//component
 import Marquee from "react-fast-marquee";
+import Meta from "../components/Meta";
 import BlogCard from "../components/BlogCard";
 import ProductCard from "../components/ProductCard";
 import SpecialProduct from "../components/SpecialProduct";
@@ -31,6 +33,7 @@ import SpecialProduct from "../components/SpecialProduct";
 const Home = () => {
   return (
     <>
+      <Meta title="Trang chủ" />
       <section className="home-wrapper-1 py-5">
         <div className="container-xxl ">
           <div className="row m-4">
