@@ -1,7 +1,7 @@
 import React from "react";
 
 import ReactStars from "react-rating-stars-component";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 //img
 import productimg from "../images/watch.jpg";
 import productimg1 from "../images/watch-1.avif";
@@ -9,9 +9,17 @@ import AddImg from "../images/add-cart.svg";
 import ViewImg from "../images/view.svg";
 import CompareImg from "../images/prodcompare.svg";
 import Wishlist from "../images/wish.svg";
-const ProductCard = () => {
+const ProductCard = (props) => {
+  const { grid } = props;
+  console.log(grid);
+  let location = useLocation();
+
   return (
-    <div className="col-3">
+    <div
+      className={` ${
+        location.pathname == "/product" ? `gr-${grid}` : "col-3"
+      } `}
+    >
       <div className="product-card position-relative">
         <div className="wishlist-icon position-absolute">
           <Link>
@@ -34,7 +42,7 @@ const ProductCard = () => {
             edit={false}
             activeColor="#ffd700"
           />
-          <p className="description">
+          <p className={`description ${grid === 12 ? "d-block" : "d-none"}`}>
             At vero eos et accusamus et iusto odio dignissimos ducimus qui
             blanditiis praesentium voluptatum deleniti atque corrupti quos
             dolores et quas molestias excepturi sint occaecati cupiditate non
