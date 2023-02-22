@@ -29,12 +29,13 @@ import Meta from "../components/Meta";
 import BlogCard from "../components/BlogCard";
 import ProductCard from "../components/ProductCard";
 import SpecialProduct from "../components/SpecialProduct";
+import Container from "../components/Container";
 
 const Home = () => {
   return (
     <>
       <Meta title="Trang chủ" />
-      <section className="home-wrapper-1 py-5">
+      <Container class1="home-wrapper-1 py-5">
         <div className="container-xxl ">
           <div className="row m-4">
             <div className="col-6">
@@ -114,8 +115,8 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
-      <section className="home-wrapper-2 py-5">
+      </Container>
+      <Container class1="home-wrapper-2 py-5">
         <div className="container-xxl">
           <div className="row">
             <div className="col-12">
@@ -159,8 +160,8 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
-      <section className="home-wrapper-2 py-5">
+      </Container>
+      <Container class1="home-wrapper-2 py-5">
         <div className="container-xxl">
           <div className="row">
             <div className="col-12">
@@ -225,8 +226,8 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
-      <section className="marque-wrapper home-wrapper-2 py-5">
+      </Container>
+      <Container class1="marque-wrapper home-wrapper-2 py-5">
         <div className="container-xxl">
           <div className="row">
             <div className="col-12">
@@ -261,8 +262,8 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
-      <section className="featured-wrapper home-wrapper-2 py-5">
+      </Container>
+      <Container class1="featured-wrapper home-wrapper-2 py-5">
         <div className="container-xxl">
           <div className="row">
             <div className="col-12">
@@ -274,8 +275,8 @@ const Home = () => {
             <ProductCard />
           </div>
         </div>
-      </section>
-      <section className="special-wrapper py-5 home-wrapper-2">
+      </Container>
+      <Container class1="special-wrapper py-5 home-wrapper-2">
         <div className="container-xxl ">
           <div className="row">
             <div className="col-12">
@@ -289,8 +290,8 @@ const Home = () => {
             <SpecialProduct />
           </div>
         </div>
-      </section>
-      <section className="blog-wrapper py-5 home-wrapper-2">
+      </Container>
+      <Container class1="blog-wrapper py-5 home-wrapper-2">
         <div className="container-xxl">
           <div className="row">
             <div className="col-12">
@@ -312,7 +313,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </Container>
     </>
   );
 };
