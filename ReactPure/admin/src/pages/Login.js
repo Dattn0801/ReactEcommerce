@@ -20,6 +20,7 @@ const Login = () => {
     },
     validationSchema: schema,
     onSubmit: (values) => {
+      //alert(JSON.stringify(values, null, 2));
       dispatch(login(values));
     },
   });
@@ -28,7 +29,7 @@ const Login = () => {
   const { user, isError, isSuccess, isLoading, message } = authState.auth;
 
   useEffect(() => {
-    if (isSuccess) {
+    if (user || isSuccess) {
       navigate("admin");
     } else {
       navigate("");
@@ -45,7 +46,7 @@ const Login = () => {
         <h3 className="text-center title">Đăng nhập</h3>
         <p className="text-center">Login to your account to continue.</p>
         <div className="error text-center">
-          {message.message == "Rejected" ? "You are not an Admin" : ""}
+          {message.message == "Rejected" ? "Bạn không phải là admin" : ""}
         </div>
         <form action="" onSubmit={formik.handleSubmit}>
           <CustomInput
