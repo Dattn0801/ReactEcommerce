@@ -14,11 +14,12 @@ const couponRouter = require("./routes/couponRoute");
 const uploadRouter = require("./routes/uploadRoute");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
-// const cors = require("cors");
+const cors = require("cors");
 
 //connect to mongoose
 dbConnect();
 // use cookie trên api tránh lỗi
+app.use(cors());
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(bodyParser.json());

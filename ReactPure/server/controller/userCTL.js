@@ -61,6 +61,7 @@ exports.loginUser = asyncHandler(async (req, res) => {
 // admin login
 exports.loginAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+  console.log(email, password);
   // check if user exists or not
   const findAdmin = await User.findOne({ email });
   if (findAdmin.role !== "admin") throw new Error("Not Authorised");
