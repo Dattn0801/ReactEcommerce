@@ -17,6 +17,7 @@ import { FaClipboardList, FaBloggerB } from "react-icons/fa";
 import { SiBrandfolder } from "react-icons/si";
 import { BiCategoryAlt } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { Layout, Menu, theme } from "antd";
 
 const { Header, Sider, Content } = Layout;
@@ -26,6 +27,8 @@ const MainLayout = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const authState = useSelector((state) => state);
+  const { user } = authState.auth;
   const navigate = useNavigate();
   return (
     <Layout>
@@ -199,8 +202,10 @@ const MainLayout = () => {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <h5 className="mb-0">Dtn</h5>
-                <p className="mb-0">thanhdat08011999@gmail.com</p>
+                <h5 className="mb-0">
+                  {user && user.firstname + " " + user.lastname}
+                </h5>
+                <p className="mb-0">{user && user.email}</p>
               </div>
               <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <li>
