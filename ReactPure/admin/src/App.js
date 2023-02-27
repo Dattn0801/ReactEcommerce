@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import "./index.css";
 import MainLayout from "./components/MainLayout";
@@ -25,7 +25,7 @@ import AddProduct from "./pages/AddProduct";
 import BlogCatList from "./pages/BlogCatList";
 function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/reset-password" element={<Resetpassword />} />
@@ -49,7 +49,7 @@ function App() {
           <Route path="product" element={<AddProduct />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
 export default App;

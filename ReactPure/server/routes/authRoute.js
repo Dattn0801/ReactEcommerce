@@ -60,6 +60,7 @@ router.delete("/:id", authMiddleware, isAdmin, deleteaUser);
 router.put("/:id", authMiddleware, isAdmin, updatedUser);
 
 //admin
+router.post("/admin-login", loginAdmin);
 router.get("/all-users", authMiddleware, isAdmin, getallUser);
 router.put("/block-user/:id", authMiddleware, isAdmin, blockUser);
 router.put("/unblock-user/:id", authMiddleware, isAdmin, unblockUser);
