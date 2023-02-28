@@ -23,10 +23,12 @@ import Addbrand from "./pages/AddBrand";
 import ProductList from "./pages/ProductList";
 import AddProduct from "./pages/AddProduct";
 import BlogCatList from "./pages/BlogCatList";
+import PageNotFound from "./pages/PageNotFound";
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="*" element={<PageNotFound />} />
         <Route path="/" element={<Login />} />
         <Route path="/reset-password" element={<Resetpassword />} />
         <Route path="/forgot-password" element={<Forgotpassword />} />
