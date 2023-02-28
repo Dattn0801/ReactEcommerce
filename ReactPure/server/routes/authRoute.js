@@ -31,6 +31,7 @@ const {
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 
 //user
+router.get("/all-users", getallUser);
 router.post("/login", loginUser);
 router.get("/logout", logout);
 router.put("/password", authMiddleware, updatePassword);
@@ -61,7 +62,7 @@ router.put("/:id", authMiddleware, isAdmin, updatedUser);
 
 //admin
 router.post("/admin-login", loginAdmin);
-router.get("/all-users", authMiddleware, isAdmin, getallUser);
+
 router.put("/block-user/:id", authMiddleware, isAdmin, blockUser);
 router.put("/unblock-user/:id", authMiddleware, isAdmin, unblockUser);
 router.get("/getallorders", authMiddleware, isAdmin, getAllOrders);

@@ -7,7 +7,7 @@ import Login from "./pages/Login";
 import Resetpassword from "./pages/ResetPassword";
 import Forgotpassword from "./pages/ForgotPassword";
 import Dashboard from "./pages/Dashboard";
-import Customers from "./pages/Customer";
+import Customers from "./pages/Customers";
 import Bloglist from "./pages/BlogList";
 import Blogcatlist from "./pages/BlogCatList";
 import Enquiries from "./pages/Enquiries";
