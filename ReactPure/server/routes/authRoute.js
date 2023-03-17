@@ -30,42 +30,30 @@ const {
 
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 
-//user
+router.get("/getallorders", authMiddleware, isAdmin, getAllOrders);
 router.get("/all-users", getallUser);
 router.post("/login", loginUser);
 router.get("/logout", logout);
 router.put("/password", authMiddleware, updatePassword);
 router.post("/forgot-password-token", forgotPasswordToken);
 router.put("/reset-password/:token", resetPassword);
-
-//refreshtoken
 router.get("/refresh", handleRefreshToken);
-
-//wishlist
 router.get("/wishlist", authMiddleware, getWishlist);
-//address
 router.put("/address", authMiddleware, isAdmin, saveAddress);
-
-//cart
 router.post("/cart", authMiddleware, userCart);
 router.get("/cart/:id", getUserCart);
 router.delete("/cart/:id", authMiddleware, emptyCart);
 router.post("/cart/applycoupon", authMiddleware, applyCoupon);
 router.post("/cart/cash-order", authMiddleware, createOrder);
 router.get("/orders", authMiddleware, getOrders);
-
-//crud
 router.post("/register", createUser);
 router.get("/:id", authMiddleware, isAdmin, getaUser);
 router.delete("/:id", authMiddleware, isAdmin, deleteaUser);
 router.put("/:id", authMiddleware, isAdmin, updatedUser);
-
-//admin
 router.post("/admin-login", loginAdmin);
-
 router.put("/block-user/:id", authMiddleware, isAdmin, blockUser);
 router.put("/unblock-user/:id", authMiddleware, isAdmin, unblockUser);
-router.get("/getallorders", authMiddleware, isAdmin, getAllOrders);
+
 router.put(
   "/order/update-order/:id",
   authMiddleware,

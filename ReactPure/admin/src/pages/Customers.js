@@ -8,7 +8,7 @@ const columns = [
     dataIndex: "key",
   },
   {
-    title: "Name",
+    title: "Khách hàng",
     dataIndex: "name",
     sorter: (a, b) => a.name.length - b.name.length,
   },
@@ -17,7 +17,7 @@ const columns = [
     dataIndex: "email",
   },
   {
-    title: "Mobile",
+    title: "Số điện thoại",
     dataIndex: "mobile",
   },
 ];
@@ -30,10 +30,10 @@ const Customers = () => {
   const customerstate = useSelector((state) => state.customer.customers);
   console.log(customerstate);
 
-  const data1 = [];
+  const data = [];
   for (let i = 0; i < customerstate.length; i++) {
     if (customerstate[i].role !== "admin") {
-      data1.push({
+      data.push({
         key: i + 1,
         name: customerstate[i].firstname + " " + customerstate[i].lastname,
         email: customerstate[i].email,
@@ -44,9 +44,9 @@ const Customers = () => {
 
   return (
     <div>
-      <h3 className="mb-4 title">Customers</h3>
+      <h3 className="mb-4 title">Khách hàng</h3>
       <div>
-        <Table columns={columns} dataSource={data1} />
+        <Table columns={columns} dataSource={data} />
       </div>
     </div>
   );

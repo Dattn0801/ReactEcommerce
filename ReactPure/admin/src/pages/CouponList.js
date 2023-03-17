@@ -4,7 +4,7 @@ import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteABlog, getBlogs, resetState } from "../features/blog/blogSlice";
+import { deleteACoupon, getAllCoupon } from "../features/coupon/couponSlice";
 import CustomModal from "../components/CustomModal";
 
 const columns = [
@@ -12,13 +12,21 @@ const columns = [
     title: "SNo",
     dataIndex: "key",
   },
+
   {
     title: "Tên",
     dataIndex: "name",
+    sorter: (a, b) => a.name.length - b.name.length,
   },
   {
-    title: "Danh mục",
-    dataIndex: "category",
+    title: "Giá giảm",
+    dataIndex: "discount",
+    sorter: (a, b) => a.discount - b.discount,
+  },
+  {
+    title: "Ngày hết hạn",
+    dataIndex: "expiry",
+    sorter: (a, b) => a.name.length - b.name.length,
   },
   {
     title: "Action",
@@ -26,12 +34,12 @@ const columns = [
   },
 ];
 
-const Bloglist = () => {
+const Couponlist = () => {
   const [open, setOpen] = useState(false);
-  const [blogId, setblogId] = useState("");
+  const [couponId, setcouponId] = useState("");
   const showModal = (e) => {
     setOpen(true);
-    setblogId(e);
+    setcouponId(e);
   };
 
   const hideModal = () => {
@@ -39,28 +47,27 @@ const Bloglist = () => {
   };
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(resetState());
-    dispatch(getBlogs());
+    dispatch(getAllCoupon());
   }, []);
-  const getBlogState = useSelector((state) => state.blogs.blogs);
-  const data1 = [];
-  for (let i = 0; i < getBlogState.length; i++) {
-    data1.push({
+  const couponState = useSelector((state) => state.coupon.coupons);
+  const data = [];
+  for (let i = 0; i < couponState.length; i++) {
+    data.push({
       key: i + 1,
-      name: getBlogState[i].title,
-      category: getBlogState[i].category,
-
+      name: couponState[i].name,
+      discount: couponState[i].discount,
+      expiry: new Date(couponState[i].expiry).toLocaleString(),
       action: (
         <>
           <Link
-            to={`/admin/blog/${getBlogState[i].id}`}
+            to={`/admin/coupon/${couponState[i]._id}`}
             className=" fs-3 text-danger"
           >
             <BiEdit />
           </Link>
           <button
             className="ms-3 fs-3 text-danger bg-transparent border-0"
-            onClick={() => showModal(getBlogState[i]._id)}
+            onClick={() => showModal(couponState[i]._id)}
           >
             <AiFillDelete />
           </button>
@@ -68,30 +75,30 @@ const Bloglist = () => {
       ),
     });
   }
-  const deleteBlog = (e) => {
-    dispatch(deleteABlog(e));
+  const deleteCoupon = (e) => {
+    dispatch(deleteACoupon(e));
 
     setOpen(false);
     setTimeout(() => {
-      dispatch(getBlogs());
+      dispatch(getAllCoupon());
     }, 100);
   };
   return (
     <div>
-      <h3 className="mb-4 title">Danh sách Blog</h3>
+      <h3 className="mb-4 title">Coupons</h3>
       <div>
-        <Table columns={columns} dataSource={data1} />
+        <Table columns={columns} dataSource={data} />
       </div>
       <CustomModal
         hideModal={hideModal}
         open={open}
         performAction={() => {
-          deleteBlog(blogId);
+          deleteCoupon(couponId);
         }}
-        title="Are you sure you want to delete this blog?"
+        title="Are you sure you want to delete this Coupon?"
       />
     </div>
   );
 };
 
-export default Bloglist;
+export default Couponlist;

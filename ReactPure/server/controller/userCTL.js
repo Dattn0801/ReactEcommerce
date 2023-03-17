@@ -470,13 +470,14 @@ exports.getOrders = asyncHandler(async (req, res) => {
   }
 });
 
-//get all orders
 exports.getAllOrders = asyncHandler(async (req, res) => {
+  console.log("assd");
   try {
     const alluserorders = await Order.find()
       .populate("products.product")
       .populate("orderby")
       .exec();
+    console.log(alluserorders);
     res.json(alluserorders);
   } catch (error) {
     throw new Error(error);

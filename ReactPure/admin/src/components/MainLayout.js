@@ -19,7 +19,6 @@ import { BiCategoryAlt } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Layout, Menu, theme } from "antd";
-
 const { Header, Sider, Content } = Layout;
 
 const MainLayout = () => {

@@ -24,6 +24,8 @@ import ProductList from "./pages/ProductList";
 import AddProduct from "./pages/AddProduct";
 import BlogCatList from "./pages/BlogCatList";
 import PageNotFound from "./pages/PageNotFound";
+import CouponList from "./pages/CouponList";
+import AddCoupon from "./pages/AddCoupon";
 function App() {
   return (
     <Router>
@@ -49,6 +51,8 @@ function App() {
           <Route path="brand" element={<Addbrand />} />
           <Route path="list-product" element={<ProductList />} />
           <Route path="product" element={<AddProduct />} />
+          <Route path="coupon-list" element={<CouponList />} />
+          <Route path="coupon" element={<AddCoupon />} />
         </Route>
       </Routes>
     </Router>
