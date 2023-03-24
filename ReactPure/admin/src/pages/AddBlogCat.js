@@ -70,7 +70,7 @@ const AddBlogCat = () => {
   return (
     <div>
       <h3 className="mb-4  title">
-        {getBlogCatId !== undefined ? "Edit" : "Add"} Blog Category
+        {getBlogCatId !== undefined ? "Sửa" : "Thêm"} danh mục Blog
       </h3>
       <div>
         <form action="" onSubmit={formik.handleSubmit}>
@@ -90,7 +90,7 @@ const AddBlogCat = () => {
             className="btn btn-success border-0 rounded-3 my-5"
             type="submit"
           >
-            {getBlogCatId !== undefined ? "Edit" : "Add"} Blog Category
+            {getBlogCatId !== undefined ? "Sửa" : "Thêm"}
           </button>
         </form>
       </div>

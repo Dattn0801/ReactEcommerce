@@ -26,11 +26,13 @@ const {
   updateOrderStatus,
   getAllOrders,
   loginUser,
+  getUserProfile,
 } = require("../controller/userCTL");
 
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 
 router.get("/getallorders", authMiddleware, isAdmin, getAllOrders);
+router.get("/profile", authMiddleware, getUserProfile);
 router.get("/all-users", getallUser);
 router.post("/login", loginUser);
 router.get("/logout", logout);

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../features/customers/customerSlice";
 const columns = [
   {
-    title: "SNo",
+    title: "Stt",
     dataIndex: "key",
   },
   {
@@ -28,8 +28,6 @@ const Customers = () => {
     dispatch(getUsers());
   }, []);
   const customerstate = useSelector((state) => state.customer.customers);
-  console.log(customerstate);
-
   const data = [];
   for (let i = 0; i < customerstate.length; i++) {
     if (customerstate[i].role !== "admin") {

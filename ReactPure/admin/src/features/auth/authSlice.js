@@ -12,6 +12,7 @@ const initialState = {
   isSuccess: false,
   message: "",
 };
+
 export const login = createAsyncThunk(
   "auth/admin-login",
   async (userData, thunkAPI) => {
@@ -47,7 +48,11 @@ export const getOrderByUser = createAsyncThunk(
 export const authSlice = createSlice({
   name: "auth",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.user = null;
+    },
+  },
   extraReducers: (buildeer) => {
     buildeer
       .addCase(login.pending, (state) => {
@@ -100,5 +105,5 @@ export const authSlice = createSlice({
       });
   },
 });
-
+export const {  logout } = authSlice.actions;
 export default authSlice.reducer;

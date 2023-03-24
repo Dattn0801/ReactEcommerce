@@ -13,9 +13,13 @@ import {
 } from "../features/coupon/couponSlice";
 
 let schema = yup.object().shape({
-  name: yup.string().required("Coupon Name is Required"),
-  expiry: yup.date().required("Expiry Date is Required"),
-  discount: yup.number().required("Discount Percentage is Required"),
+  name: yup.string().required("Nhập tên mã giảm"),
+  expiry: yup.date().required("Nhập hạn giảm"),
+  discount: yup
+    .number()
+    .min(1, "lớn hơn một")
+    .max(100, "ít hơn 100")
+    .required("Nhập phần trăm giảm"),
 });
 const AddCoupon = () => {
   const dispatch = useDispatch();
@@ -50,14 +54,14 @@ const AddCoupon = () => {
 
   useEffect(() => {
     if (isSuccess && createdCoupon) {
-      toast.success("Coupon Added Successfullly!");
+      toast.success("Thêm coupon thành công!");
     }
     if (isSuccess && updatedCoupon) {
-      toast.success("Coupon Updated Successfullly!");
+      toast.success("Cập nhật coupon thành công!");
       navigate("/admin/coupon-list");
     }
     if (isError && couponName && couponDiscount && couponExpiry) {
-      toast.error("Something Went Wrong!");
+      toast.error("Lỗi!");
     }
   }, [isSuccess, isError, isLoading]);
   const formik = useFormik({
@@ -86,7 +90,7 @@ const AddCoupon = () => {
   return (
     <div>
       <h3 className="mb-4 title">
-        {getCouponId !== undefined ? "Edit" : "Add"} Coupon
+        {getCouponId !== undefined ? "Sửa" : "Thêm"} mã giảm giá
       </h3>
       <div>
         <form action="" onSubmit={formik.handleSubmit}>
@@ -130,7 +134,7 @@ const AddCoupon = () => {
             className="btn btn-success border-0 rounded-3 my-5"
             type="submit"
           >
-            {getCouponId !== undefined ? "Edit" : "Add"} Coupon
+            {getCouponId !== undefined ? "Sửa" : "Thêm"}
           </button>
         </form>
       </div>

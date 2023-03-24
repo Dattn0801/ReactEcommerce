@@ -7,30 +7,30 @@ import { getProducts } from "../features/product/productSlice";
 import { Link } from "react-router-dom";
 const columns = [
   {
-    title: "SNo",
+    title: "Stt",
     dataIndex: "key",
   },
   {
-    title: "Title",
+    title: "Tên",
     dataIndex: "title",
     sorter: (a, b) => a.title.length - b.title.length,
   },
   {
-    title: "Brand",
+    title: "Thương hiệu",
     dataIndex: "brand",
     sorter: (a, b) => a.brand.length - b.brand.length,
   },
   {
-    title: "Category",
+    title: "Danh mục",
     dataIndex: "category",
     sorter: (a, b) => a.category.length - b.category.length,
   },
   {
-    title: "Color",
+    title: "Màu",
     dataIndex: "color",
   },
   {
-    title: "Price",
+    title: "Giá",
     dataIndex: "price",
     sorter: (a, b) => a.price - b.price,
   },
@@ -48,9 +48,9 @@ const ProductList = () => {
   const productState = useSelector((state) => state.product.products);
   console.log(productState);
 
-  const data1 = [];
+  const data = [];
   for (let i = 0; i < productState.length; i++) {
-    data1.push({
+    data.push({
       key: i + 1,
       title: productState[i].title,
       brand: productState[i].brand,
@@ -73,7 +73,7 @@ const ProductList = () => {
     <div>
       <h3 className="mb-4 title">Danh sách sản phẩm</h3>
       <div>
-        <Table columns={columns} dataSource={data1} />
+        <Table columns={columns} dataSource={data} />
       </div>
     </div>
   );

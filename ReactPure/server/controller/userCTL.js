@@ -11,7 +11,23 @@ const sendEmail = require("../controller/emailCTL");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const uniqid = require("uniqid");
-//sign in user
+
+exports.getUserProfile = asyncHandler(async (req, res) => {
+  // req.user was set in authMiddleware.js
+  const user = await User.findById(req.user._id);
+  console.log(user);
+  if (user) {
+    res.json({
+      id: user._id,
+      firstName: user.firstname,
+      email: user.email,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+// register
 exports.createUser = asyncHandler(async (req, res) => {
   const email = req.body.email;
   console.log(email);
