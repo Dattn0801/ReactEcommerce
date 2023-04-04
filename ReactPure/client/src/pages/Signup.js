@@ -8,7 +8,7 @@ import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 
 import * as Yup from "yup";
-import { registerUser } from "../features/user/usserSlice";
+import { registerUser } from "../features/user/userSlice";
 
 const schema = Yup.object().shape({
   firstname: Yup.string()

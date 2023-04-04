@@ -5,7 +5,10 @@ const register = async (userData) => {
   const response = await axios.post(`${base_url}user/register`, userData);
   return response.data;
 };
-
+const login = async (userData) => {
+  const response = await axios.post(`${base_url}user/login`, userData);
+  return response.data;
+};
 export const authService = {
-  register,
+  register,login
 };

@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { NavLink, Link } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
 import compare from "../images/compare.svg";
@@ -7,6 +8,8 @@ import user from "../images/user.svg";
 import cart from "../images/cart.svg";
 import menu from "../images/menu.svg";
 const Header = () => {
+  // const authState = useSelector((state) => state);
+  // const { user } = authState.auth;
   return (
     <>
       <header className="header-top-strip py-3">
