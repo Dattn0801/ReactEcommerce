@@ -534,3 +534,32 @@ exports.updateOrderStatus = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
+exports.addToWishList = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { proId } = req.body;
+  try {
+    const user = await User.findById(_id);
+    const alreadyAdded = user.wishlist.find((id) => id.toString() === proId);
+    if (alreadyAdded) {
+      let user = await User.findByIdAndUpdate(
+        _id,
+        {
+          $pull: { wishlist: proId },
+        },
+        { new: true }
+      );
+      res.json(user);
+    } else {
+      let user = await User.findByIdAndUpdate(
+        _id,
+        {
+          $push: { wishlist: proId },
+        },
+        { new: true }
+      );
+      res.json(user);
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+});
