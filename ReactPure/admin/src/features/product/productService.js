@@ -12,10 +12,30 @@ const createProduct = async (product) => {
 
   return response.data;
 };
+const deleteProduct = async (id) => {
+  const response = await axios.delete(`${base_url}product/${id}`, config);
+};
+const getProduct = async (id) => {
+  const response = await axios.get(`${base_url}product/${id}`, config);
 
+  return response.data;
+};
+const updateProduct = async (product) => {
+  console.log(product);
+  const response = await axios.put(
+    `${base_url}product/${product.id}`,
+    { title: product.pData.title },
+    config
+  );
+
+  return response.data;
+};
 const productService = {
   getProducts,
   createProduct,
+  deleteProduct,
+  getProduct,
+  updateProduct,
 };
 
 export default productService;

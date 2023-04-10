@@ -70,8 +70,8 @@ const Bloglist = () => {
   }
   const deleteBlog = (e) => {
     dispatch(deleteABlog(e));
-
     setOpen(false);
+    
     setTimeout(() => {
       dispatch(getBlogs());
     }, 100);

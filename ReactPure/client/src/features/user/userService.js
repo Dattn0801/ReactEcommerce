@@ -7,8 +7,13 @@ const register = async (userData) => {
 };
 const login = async (userData) => {
   const response = await axios.post(`${base_url}user/login`, userData);
+  if (response.data) {
+    localStorage.setItem("user", JSON.stringify(response.data));
+    console.log(response.data);
+  }
   return response.data;
 };
 export const authService = {
-  register,login
+  register,
+  login,
 };

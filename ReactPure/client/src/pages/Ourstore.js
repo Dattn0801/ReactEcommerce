@@ -15,11 +15,11 @@ import gr1 from "../images/gr.svg";
 import gr2 from "../images/gr2.svg";
 import gr3 from "../images/gr3.svg";
 import gr4 from "../images/gr4.svg";
-
 import { getAllProducts } from "../features/products/product Slice";
+
 const Ourstore = () => {
   const [grid, setGrid] = useState(4);
-  const productsState = useSelector((state) => state.product.product);
+  const productsState = useSelector((state) => state?.product?.product);
   const dispatch = useDispatch();
   useEffect(() => {
     getProducts();
@@ -261,7 +261,7 @@ const Ourstore = () => {
               </div>
               <div className="products-list pb-5">
                 <div className="d-flex gap-10 flex-wrap">
-                  <ProductCard grid={grid} data={productsState} />
+                  <ProductCard  data={productsState ?productsState:[]} grid={grid} />
                 </div>
               </div>
             </div>

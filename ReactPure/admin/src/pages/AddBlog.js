@@ -45,7 +45,7 @@ const Addblog = () => {
   useEffect(() => {
     if (getBlogId !== undefined) {
       dispatch(getABlog(getBlogId));
-      img.push(blogImages);
+      //img.push(blogImages);
     } else {
       dispatch(resetState());
     }

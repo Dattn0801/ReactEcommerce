@@ -559,6 +559,7 @@ exports.addToWishList = asyncHandler(async (req, res) => {
       );
       res.json(user);
     }
+  
   } catch (error) {
     throw new Error(error);
   }

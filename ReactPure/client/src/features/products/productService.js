@@ -4,13 +4,24 @@ import { base_url } from "../../utils/baseUrl";
 
 const getProducts = async () => {
   const response = await axios.get(`${base_url}product`);
-  return response.data;
+  if (response.data) {
+    return response.data;
+  }
 };
 
-const addToWishList = async () => {
-  const response = await axios.put(`${base_url}product`);
-  return response.data; 
-}
+const addToWishList = async (prodId) => {
+  const response = await axios.put(
+    `${base_url}product/wishlist`,
+    {
+      prodId,
+    },
+    config
+  );
+  if (response.data) {
+    return response.data;
+  }
+};
 export const productService = {
-  getProducts,addToWishList
+  getProducts,
+  addToWishList,
 };

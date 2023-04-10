@@ -109,13 +109,15 @@ exports.getAllProduct = asyncHandler(async (req, res) => {
 });
 
 exports.addToWishlist = asyncHandler(async (req, res) => {
-  const { _id } = req.user;
+  const _id = req.user;
   const { prodId } = req.body;
-  console.log(prodId);
+
+  console.log(_id);
   try {
     const user = await User.findById(_id);
     const alreadyadded = user.wishlist.find((id) => id.toString() === prodId);
     if (alreadyadded) {
+      console.log("addd");
       let user = await User.findByIdAndUpdate(
         _id,
         {
@@ -127,6 +129,7 @@ exports.addToWishlist = asyncHandler(async (req, res) => {
       );
       res.json(user);
     } else {
+      console.log("notadd");
       let user = await User.findByIdAndUpdate(
         _id,
         {

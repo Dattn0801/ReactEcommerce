@@ -27,7 +27,7 @@ const {
   getAllOrders,
   loginUser,
   getUserProfile,
-  addToWishList
+  addToWishList,
 } = require("../controller/userCTL");
 
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
@@ -41,8 +41,8 @@ router.put("/password", authMiddleware, updatePassword);
 router.post("/forgot-password-token", forgotPasswordToken);
 router.put("/reset-password/:token", resetPassword);
 router.get("/refresh", handleRefreshToken);
-router.get("/wishlist", authMiddleware, getWishlist);
 router.put("/wishlist", authMiddleware, addToWishList);
+router.get("/wishlist", authMiddleware, getWishlist);
 router.put("/address", authMiddleware, isAdmin, saveAddress);
 router.post("/cart", authMiddleware, userCart);
 router.get("/cart/:id", getUserCart);

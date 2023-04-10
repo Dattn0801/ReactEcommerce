@@ -13,7 +13,7 @@ import { getColors } from "../features/color/colorSlice";
 import { Select } from "antd";
 import Dropzone from "react-dropzone";
 import { delImg, uploadImg } from "../features/upload/uploadSlice";
-import { createProducts, resetState } from "../features/product/productSlice";
+import { createProduct, resetState } from "../features/product/productSlice";
 let schema = yup.object().shape({
   title: yup.string().required("Title is Required"),
   description: yup.string().required("Description is Required"),
@@ -28,7 +28,7 @@ let schema = yup.object().shape({
   quantity: yup.number().required("Quantity is Required"),
 });
 
-const AddProduct = () => {
+const Addproduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [color, setColor] = useState([]);
@@ -87,7 +87,7 @@ const AddProduct = () => {
     },
     validationSchema: schema,
     onSubmit: (values) => {
-      dispatch(createProducts(values));
+      dispatch(createProduct(values));
       formik.resetForm();
       setColor(null);
       setTimeout(() => {
@@ -101,7 +101,7 @@ const AddProduct = () => {
   };
   return (
     <div>
-      <h3 className="mb-4 title">Thêm sản phẩm</h3>
+      <h3 className="mb-4 title">Add Product</h3>
       <div>
         <form
           onSubmit={formik.handleSubmit}
@@ -265,4 +265,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default Addproduct;
