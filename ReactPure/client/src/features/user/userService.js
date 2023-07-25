@@ -13,7 +13,14 @@ const login = async (userData) => {
   }
   return response.data;
 };
+const getUserWislist = async () => {
+  const response = await axios.get(`${base_url}user/wishlist`, config);
+  if (response.data) {
+    return response.data;
+  }
+};
 export const authService = {
   register,
   login,
+  getUserWislist,
 };

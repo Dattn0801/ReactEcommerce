@@ -23,6 +23,16 @@ export const login = createAsyncThunk(
     }
   }
 );
+export const getUserWislist = createAsyncThunk(
+  "user/wishlist",
+  async (thunkAPI) => {
+    try {
+      return await authService.getUserWislist();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 const initialState = {
   user: "",
@@ -30,6 +40,7 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
+  
 };
 export const authSlice = createSlice({
   name: "auth",
@@ -77,6 +88,21 @@ export const authSlice = createSlice({
         if (state.isError === true) {
           toast.error(" login error");
         }
+      })
+      .addCase(getUserWislist.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getUserWislist.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.wishlist = action.payload;
+      })
+      .addCase(getUserWislist.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
       });
   },
 });

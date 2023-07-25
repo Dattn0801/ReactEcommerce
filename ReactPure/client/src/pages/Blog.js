@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import BlogCard from "../components/BlogCard";
 import Container from "../components/Container";
+import { getAllBlogs } from "../features/blogs/blogSlice";
+import { useDispatch, useSelector } from "react-redux";
+//time, locate vietnam
+import moment from "moment";
+import "moment/locale/vi";
 
 const Blog = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    getBlogs();
+  }, []);
+  const getBlogs = () => {
+    dispatch(getAllBlogs());
+  };
+  const blogState = useSelector((state) => state?.blog?.blog);
+  console.log(blogState);
   return (
     <>
       <Meta title={"Blogs"} />
@@ -26,18 +40,22 @@ const Blog = () => {
           </div>
           <div className="col-9">
             <div className="row">
-              <div className="col-6 mb-3">
-                <BlogCard />
-              </div>
-              <div className="col-6 mb-3">
-                <BlogCard />
-              </div>
-              <div className="col-6 mb-3">
-                <BlogCard />
-              </div>
-              <div className="col-6 mb-3">
-                <BlogCard />
-              </div>
+              {blogState &&
+                blogState.map((item, index) => {
+                  return (
+                    <div className="col-6 mb-3" key={index}>
+                      <BlogCard
+                        id={item._id}
+                        title={item?.title}
+                        description={item?.description}
+                        image={item?.images[0]?.url}
+                        date={moment(item?.createdAt)
+                          .locale("vi")
+                          .format("LLL")}
+                      />
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </div>

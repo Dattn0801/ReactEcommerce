@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactStars from "react-rating-stars-component";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addToWishList } from "../features/products/product Slice";
+import { addToWishList } from "../features/products/productSlice";
 //img
 import productimg from "../images/watch.jpg";
 import productimg1 from "../images/watch-1.avif";
@@ -54,7 +54,7 @@ const ProductCard = (props) => {
                   alt="product image"
                 />
               </div>
-              <div className="product-details">
+              <div className="product-details pt-2">
                 <h6 className="brand">{item?.brand}</h6>
                 <h5 className="product-title">{item?.title}</h5>
                 <ReactStars

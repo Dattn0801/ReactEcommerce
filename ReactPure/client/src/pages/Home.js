@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 //img
 import catbanner1 from "../images/catbanner-01.jpg";
@@ -22,7 +23,12 @@ import brand5 from "../images/brand-05.png";
 import brand6 from "../images/brand-06.png";
 import brand7 from "../images/brand-07.png";
 import brand8 from "../images/brand-08.png";
-
+import Wishlist from "../images/wish.svg";
+import ReactStars from "react-rating-stars-component";
+import AddImg from "../images/add-cart.svg";
+import ViewImg from "../images/view.svg";
+import CompareImg from "../images/prodcompare.svg";
+import { addToWishList } from "../features/products/productSlice";
 //component
 import Marquee from "react-fast-marquee";
 import Meta from "../components/Meta";
@@ -30,8 +36,26 @@ import BlogCard from "../components/BlogCard";
 import ProductCard from "../components/ProductCard";
 import SpecialProduct from "../components/SpecialProduct";
 import Container from "../components/Container";
+import { getAllProducts } from "../features/products/productSlice";
+import { getAllBlogs } from "../features/blogs/blogSlice";
 
+//time, locate vietnam
+import moment from "moment";
+import "moment/locale/vi";
 const Home = () => {
+  const blogState = useSelector((state) => state?.blog?.blog);
+  const productsState = useSelector((state) => state?.product?.product);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    getProducts();
+    getBlogs();
+  }, []);
+  const getProducts = () => {
+    dispatch(getAllProducts());
+  };
+  const getBlogs = () => {
+    dispatch(getAllBlogs());
+  };
   return (
     <>
       <Meta title="Trang chủ" />
@@ -267,12 +291,68 @@ const Home = () => {
         <div className="container-xxl">
           <div className="row">
             <div className="col-12">
-              <h3 className="section-heading">Featured Collection</h3>
+              <h3 className="section-heading">Popular products</h3>
             </div>
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
+            <div className="row">
+              {productsState &&
+                productsState.map((item, index) => {
+                  if (item.tags === "popular") {
+                    return (
+                      <div key={index} className="col-3 pt-2">
+                        <div className="product-card position-relative ">
+                          <div className="wishlist-icon position-absolute">
+                            <button
+                              className="border-0 bg-transparent"
+                              onClick={(e) => {
+                                addToWish(item?._id);
+                              }}
+                            >
+                              <img src={Wishlist} alt="wishlist" />
+                            </button>
+                          </div>
+                          <div className="product-image">
+                            <img
+                              src={item?.images[0]?.url}
+                              className="img-fluid mx-auto"
+                              alt="product image"
+                            />
+                            <img
+                              src={item?.images[1]?.url}
+                              className="img-fluid mx-auto"
+                              alt="product image"
+                            />
+                          </div>
+                          <div className="product-details">
+                            <h6 className="brand">{item?.brand}</h6>
+                            <h5 className="product-title">{item?.title}</h5>
+                            <ReactStars
+                              count={5}
+                              size={24}
+                              value={item?.totalrating.toString()}
+                              edit={false}
+                              activeColor="#ffd700"
+                            />
+                            <p className="price">{item.price}</p>
+                          </div>
+                          <div className="action-bar position-absolute">
+                            <div className="d-flex flex-column gap-15">
+                              <Link>
+                                <img src={CompareImg} alt="compare" />
+                              </Link>
+                              <Link>
+                                <img src={ViewImg} alt="view" />
+                              </Link>
+                              <Link>
+                                <img src={AddImg} alt="addcart" />
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }
+                })}
+            </div>
           </div>
         </div>
       </Container>
@@ -284,10 +364,23 @@ const Home = () => {
             </div>
           </div>
           <div className="row">
-            <SpecialProduct />
-            <SpecialProduct />
-            <SpecialProduct />
-            <SpecialProduct />
+            {productsState &&
+              productsState.map((item, index) => {
+                if (item.tags === "special") {
+                  return (
+                    <SpecialProduct
+                      key={index}
+                      title={item?.title}
+                      brand={item?.brand}
+                      totalrating={item.totalrating.toString()}
+                      img={item?.images[0]?.url}
+                      price={item?.price}
+                      sold={item?.sold}
+                      quantity={item?.quantity}
+                    />
+                  );
+                }
+              })}
           </div>
         </div>
       </Container>
@@ -299,18 +392,24 @@ const Home = () => {
             </div>
           </div>
           <div className="row">
-            <div className="col-3">
-              <BlogCard />
-            </div>
-            <div className="col-3">
-              <BlogCard />
-            </div>
-            <div className="col-3">
-              <BlogCard />
-            </div>
-            <div className="col-3">
-              <BlogCard />
-            </div>
+            {blogState &&
+              blogState.map((item, index) => {
+                if (index < 4) {
+                  return (
+                    <div className="col-6 mb-3" key={index}>
+                      <BlogCard
+                        id={item._id}
+                        title={item?.title}
+                        description={item?.description}
+                        image={item?.images[0]?.url}
+                        date={moment(item?.createdAt)
+                          .locale("vi")
+                          .format("LLL")}
+                      />
+                    </div>
+                  );
+                }
+              })}
           </div>
         </div>
       </Container>
