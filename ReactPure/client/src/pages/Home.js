@@ -28,7 +28,6 @@ import ReactStars from "react-rating-stars-component";
 import AddImg from "../images/add-cart.svg";
 import ViewImg from "../images/view.svg";
 import CompareImg from "../images/prodcompare.svg";
-import { addToWishList } from "../features/products/productSlice";
 //component
 import Marquee from "react-fast-marquee";
 import Meta from "../components/Meta";
@@ -36,9 +35,11 @@ import BlogCard from "../components/BlogCard";
 import ProductCard from "../components/ProductCard";
 import SpecialProduct from "../components/SpecialProduct";
 import Container from "../components/Container";
-import { getAllProducts } from "../features/products/productSlice";
+import {
+  getAllProducts,
+  addToWishList,
+} from "../features/products/productSlice";
 import { getAllBlogs } from "../features/blogs/blogSlice";
-
 //time, locate vietnam
 import moment from "moment";
 import "moment/locale/vi";
@@ -55,6 +56,9 @@ const Home = () => {
   };
   const getBlogs = () => {
     dispatch(getAllBlogs());
+  };
+  const addToWish = (id) => {
+    dispatch(addToWishList(id));
   };
   return (
     <>
@@ -396,7 +400,7 @@ const Home = () => {
               blogState.map((item, index) => {
                 if (index < 4) {
                   return (
-                    <div className="col-6 mb-3" key={index}>
+                    <div className="col-3" key={index}>
                       <BlogCard
                         id={item._id}
                         title={item?.title}

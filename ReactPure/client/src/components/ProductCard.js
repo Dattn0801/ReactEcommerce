@@ -16,9 +16,8 @@ const ProductCard = (props) => {
 
   let location = useLocation();
   const dispatch = useDispatch();
-
+  
   const addToWish = (id) => {
-    console.log(id);
     dispatch(addToWishList(id));
   };
   return (

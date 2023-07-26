@@ -3,7 +3,11 @@ import { Table } from "antd";
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteProduct, getProducts,resetState } from "../features/product/productSlice";
+import {
+  deleteProduct,
+  getProducts,
+  resetState,
+} from "../features/product/productSlice";
 import { Link } from "react-router-dom";
 import CustomModal from "../components/CustomModal";
 const columns = [
@@ -57,9 +61,14 @@ const ProductList = () => {
     dispatch(resetState());
     dispatch(getProducts());
   }, []);
+  const deleteAProduct = (e) => {
+    dispatch(deleteProduct(e));
+    setOpen(false);
+    setTimeout(() => {
+      dispatch(getProducts());
+    }, 1000);
+  };
   const productState = useSelector((state) => state.product.products);
-  console.log(productState);
-
   const data = [];
   for (let i = 0; i < productState.length; i++) {
     data.push({
@@ -87,13 +96,6 @@ const ProductList = () => {
       ),
     });
   }
-  const deleteProduct = (e) => {
-    dispatch(deleteProduct(e));
-    setOpen(false);
-    setTimeout(() => {
-      dispatch(getProducts());
-    }, 100);
-  };
   return (
     <div>
       <h3 className="mb-4 title">Danh sách sản phẩm</h3>
@@ -104,7 +106,7 @@ const ProductList = () => {
         hideModal={hideModal}
         open={open}
         performAction={() => {
-          deleteProduct(productId);
+          deleteAProduct(productId);
         }}
         title="Bạn có muốn xóa sản phẩm?"
       />

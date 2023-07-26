@@ -14,10 +14,13 @@ const createProduct = async (product) => {
 };
 const deleteProduct = async (id) => {
   const response = await axios.delete(`${base_url}product/${id}`, config);
+  console.log(response);
+  if (response) {
+    return response.data;
+  }
 };
 const getProduct = async (id) => {
   const response = await axios.get(`${base_url}product/${id}`, config);
-
   return response.data;
 };
 const updateProduct = async (product) => {

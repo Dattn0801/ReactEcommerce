@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import productService from "./productService";
-
+import { toast } from "react-toastify";
 export const getProducts = createAsyncThunk(
   "product/get-products",
   async (thunkAPI) => {
@@ -22,15 +22,15 @@ export const createProduct = createAsyncThunk(
   }
 );
 export const deleteProduct = createAsyncThunk(
-  "product/delete-products",
-  async (productData, thunkAPI) => {
+  "product/delete-product",
+  async (id, thunkAPI) => {
     try {
-      return await productService.deleteProduct(productData);
+      return await productService.deleteProduct(id);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
-); 
+);
 export const getAProduct = createAsyncThunk(
   "product/get-product",
   async (id, thunkAPI) => {
@@ -41,7 +41,7 @@ export const getAProduct = createAsyncThunk(
     }
   }
 );
-export const updateProduct= createAsyncThunk(
+export const updateProduct = createAsyncThunk(
   "product/update-product",
   async (product, thunkAPI) => {
     try {
@@ -141,6 +141,9 @@ export const productSlice = createSlice({
         state.isError = false;
         state.isSuccess = true;
         state.deletedProduct = action.payload;
+        if (state.isSuccess === true) {
+          toast.success("Xóa sản phẩm thành công");
+        }
       })
       .addCase(deleteProduct.rejected, (state, action) => {
         state.isLoading = false;
