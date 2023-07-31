@@ -1,5 +1,5 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Link } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
 import compare from "../images/compare.svg";
@@ -10,6 +10,16 @@ import menu from "../images/menu.svg";
 const Header = () => {
   // const authState = useSelector((state) => state);
   // const { user } = authState.auth;
+  const [total, setTotalAmount] = useState(null);
+  const dispatch = useDispatch();
+  const userCartState = useSelector((state) => state.auth?.cartProducts);
+  useEffect(() => {
+    let sum = 0;
+    for (let i = 0; i < userCartState?.length; i++) {
+      sum = sum + Number(userCartState[i].quantity) * userCartState[i].price;
+      setTotalAmount(sum);
+    }
+  }, [userCartState]);
   return (
     <>
       <header className="header-top-strip py-3">
@@ -95,8 +105,10 @@ const Header = () => {
                   >
                     <img src={cart} alt="cart" />
                     <div className="d-flex flex-column gap-10">
-                      <span className="badge bg-white text-dark">0</span>
-                      <p className="mb-0">$ 500</p>
+                      <span className="badge bg-white text-dark">
+                        {userCartState?.length ? userCartState?.length : 0}
+                      </span>
+                      <p className="mb-0">{total ? total : 0} vnđ</p>
                     </div>
                   </Link>
                 </div>
