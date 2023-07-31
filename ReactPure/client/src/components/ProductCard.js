@@ -16,7 +16,6 @@ const ProductCard = (props) => {
 
   let location = useLocation();
   const dispatch = useDispatch();
-  
   const addToWish = (id) => {
     dispatch(addToWishList(id));
   };
@@ -69,14 +68,14 @@ const ProductCard = (props) => {
                   }`}
                   dangerouslySetInnerHTML={{ __html: item?.description }}
                 ></p>
-                <p className="price">{item.price}</p>
+                <p className="price">{item?.price}</p>
               </div>
               <div className="action-bar position-absolute">
                 <div className="d-flex flex-column gap-15">
                   <Link>
                     <img src={CompareImg} alt="compare" />
                   </Link>
-                  <Link>
+                  <Link to={`/product/${item?._id}`}>
                     <img src={ViewImg} alt="view" />
                   </Link>
                   <Link>

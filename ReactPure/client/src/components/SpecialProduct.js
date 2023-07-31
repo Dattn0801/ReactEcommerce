@@ -3,7 +3,7 @@ import ReactStars from "react-rating-stars-component";
 import { Link } from "react-router-dom";
 import productimg from "../images/watch.jpg";
 const SpecialProduct = (props) => {
-  const { title, brand, totalrating, price, sold, quantity, img } = props;
+  const { id, title, brand, totalrating, price, sold, quantity, img } = props;
   console.log((quantity / (quantity + sold)) * 100);
   return (
     <>
@@ -52,7 +52,9 @@ const SpecialProduct = (props) => {
                   ></div>
                 </div>
               </div>
-              <Link className="button">Add to Cart</Link>
+              <Link className="button" to={"product/" + id}>
+                Xem thêm
+              </Link>
             </div>
           </div>
         </div>

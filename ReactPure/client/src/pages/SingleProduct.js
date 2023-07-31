@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import ReactStars from "react-rating-stars-component";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
@@ -7,16 +9,55 @@ import ReactImageZoom from "react-image-zoom";
 import Color from "../components/Color";
 import { TbGitCompare } from "react-icons/tb";
 import { AiOutlineHeart } from "react-icons/ai";
-import { Link } from "react-router-dom";
 import watch from "../images/watch.jpg";
 import Container from "../components/Container";
+import { toast } from "react-toastify";
+
+import { getAProduct } from "../features/products/productSlice";
+import { addProductToCart, getUserCart } from "../features/user/userSlice";
 const SingleProduct = () => {
+  const [color, setColor] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [alreadyAdded, setAlreadyAdded] = useState(false);
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const ProId = location.pathname.split("/")[2];
+  const productState = useSelector((state) => state.product.singleProduct);
+  const cartState = useSelector((state) => state.auth.cartProducts);
+  useEffect(() => {
+    dispatch(getAProduct(ProId));
+    dispatch(getUserCart());
+  }, []);
+  useEffect(() => {
+    for (let index = 0; index < cartState?.length; index++) {
+      if (ProId === cartState[index]?.productId?._id) {
+        setAlreadyAdded(true);
+      }
+    }
+  }, []);
+  const uploadCart = () => {
+    if (color === null) {
+      toast.error(`Hãy chọn màu`);
+      return false;
+    } else {
+      dispatch(
+        addProductToCart({
+          productId: productState?._id,
+          quantity,
+          color,
+          price: productState?.price,
+        })
+      );
+    }
+  };
   const props = {
     width: 594,
     height: 600,
     zoomWidth: 600,
-
-    img: "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg",
+    img: productState?.images[0]?.url
+      ? productState?.images[0]?.url
+      : "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg",
   };
 
   const [orderedProduct, setorderedProduct] = useState(true);
@@ -32,8 +73,8 @@ const SingleProduct = () => {
   const closeModal = () => {};
   return (
     <>
-      <Meta title={"Product Name"} />
-      <BreadCrumb title="Product Name" />
+      <Meta title={productState?.title} />
+      <BreadCrumb title={productState?.title} />
       <Container class1="main-product-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-6">
@@ -43,45 +84,22 @@ const SingleProduct = () => {
               </div>
             </div>
             <div className="other-product-images d-flex flex-wrap gap-15">
-              <div>
-                <img
-                  src="https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
-                  className="img-fluid"
-                  alt=""
-                />
-              </div>
-              <div>
-                <img
-                  src="https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
-                  className="img-fluid"
-                  alt=""
-                />
-              </div>
-              <div>
-                <img
-                  src="https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
-                  className="img-fluid"
-                  alt=""
-                />
-              </div>
-              <div>
-                <img
-                  src="https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
-                  className="img-fluid"
-                  alt=""
-                />
-              </div>
+              {productState?.images.map((item, index) => {
+                return (
+                  <div>
+                    <img src={item?.url} className="img-fluid" alt="" />
+                  </div>
+                );
+              })}
             </div>
           </div>
           <div className="col-6">
             <div className="main-product-details">
               <div className="border-bottom">
-                <h3 className="title">
-                  Kids Headphones Bulk 10 Pack Multi Colored For Students
-                </h3>
+                <h3 className="title">{productState?.title}</h3>
               </div>
               <div className="border-bottom py-3">
-                <p className="price">$ 100</p>
+                <p className="price"> {productState?.price} vnđ</p>
                 <div className="d-flex align-items-center gap-10">
                   <ReactStars
                     count={5}
@@ -90,10 +108,12 @@ const SingleProduct = () => {
                     edit={false}
                     activeColor="#ffd700"
                   />
-                  <p className="mb-0 t-review">( 2 Reviews )</p>
+                  <p className="mb-0 t-review">
+                    ( {productState?.totalrating} Reviews )
+                  </p>
                 </div>
                 <a className="review-btn" href="#review">
-                  Write a Review
+                  Đánh giá sản phẩm
                 </a>
               </div>
               <div className=" py-3">
@@ -102,16 +122,16 @@ const SingleProduct = () => {
                   <p className="product-data">Watch</p>
                 </div>
                 <div className="d-flex gap-10 align-items-center my-2">
-                  <h3 className="product-heading">Brand :</h3>
-                  <p className="product-data">Havells</p>
+                  <h3 className="product-heading">Thương hiệu :</h3>
+                  <p className="product-data">{productState?.brand}</p>
                 </div>
                 <div className="d-flex gap-10 align-items-center my-2">
-                  <h3 className="product-heading">Category :</h3>
-                  <p className="product-data">Watch</p>
+                  <h3 className="product-heading">Danh mục :</h3>
+                  <p className="product-data">{productState?.category}</p>
                 </div>
                 <div className="d-flex gap-10 align-items-center my-2">
                   <h3 className="product-heading">Tags :</h3>
-                  <p className="product-data">Watch</p>
+                  <p className="product-data">{productState?.tags}</p>
                 </div>
                 <div className="d-flex gap-10 align-items-center my-2">
                   <h3 className="product-heading">Availablity :</h3>
@@ -134,33 +154,59 @@ const SingleProduct = () => {
                     </span>
                   </div>
                 </div>
-                <div className="d-flex gap-10 flex-column mt-2 mb-3">
-                  <h3 className="product-heading">Color :</h3>
-                  <Color />
-                </div>
+                {alreadyAdded === false && (
+                  <>
+                    <div className="d-flex gap-10 flex-column mt-2 mb-3">
+                      <h3 className="product-heading">Màu :</h3>
+                      <Color
+                        setColor={setColor}
+                        colorData={productState?.color}
+                      />
+                    </div>
+                  </>
+                )}
+
                 <div className="d-flex align-items-center gap-15 flex-row mt-2 mb-3">
-                  <h3 className="product-heading">Quantity :</h3>
-                  <div className="">
-                    <input
-                      type="number"
-                      name=""
-                      min={1}
-                      max={10}
-                      className="form-control"
-                      style={{ width: "70px" }}
-                      id=""
-                    />
-                  </div>
-                  <div className="d-flex align-items-center gap-30 ms-5">
+                  {alreadyAdded === false && (
+                    <>
+                      <h3 className="product-heading">Số lượng :</h3>
+                      <div className="">
+                        <input
+                          type="number"
+                          name=""
+                          min={1}
+                          max={10}
+                          className="form-control"
+                          style={{ width: "70px" }}
+                          id=""
+                          onChange={(e) => setQuantity(e.target.value)}
+                          value={quantity}
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  <div
+                    className={
+                      alreadyAdded
+                        ? "ms-0"
+                        : "ms-5" + "d-flex align-items-center gap-30"
+                    }
+                  >
                     <button
                       className="button border-0"
-                      data-bs-toggle="modal"
-                      data-bs-target="#staticBackdrop"
+                      // data-bs-toggle="modal"
+                      // data-bs-target="#staticBackdrop"
                       type="button"
+                      onClick={() => {
+                        alreadyAdded
+                          ? navigate("/cart")
+                          : uploadCart(productState?._id);
+                      }}
                     >
-                      Add to Cart
+                      {alreadyAdded ? " Xem giỏ hàng" : "Thêm vào giỏ hàng"}
                     </button>
-                    <button className="button signup">Buy It Now</button>
+                    {/* <button className="button signup">Buy It Now</button> */}
                   </div>
                 </div>
                 <div className="d-flex align-items-center gap-15">
@@ -188,9 +234,7 @@ const SingleProduct = () => {
                   <a
                     href="javascript:void(0);"
                     onClick={() => {
-                      copyToClipboard(
-                        "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
-                      );
+                      copyToClipboard(window.location.href);
                     }}
                   >
                     Copy Product Link
@@ -204,14 +248,13 @@ const SingleProduct = () => {
       <Container class1="description-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
-            <h4>Description</h4>
+            <h4>Mô tả</h4>
             <div className="bg-white p-3">
-              <p>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Tenetur nisi similique illum aut perferendis voluptas, quisquam
-                obcaecati qui nobis officia. Voluptatibus in harum deleniti
-                labore maxime officia esse eos? Repellat?
-              </p>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: productState?.description,
+                }}
+              ></p>
             </div>
           </div>
         </div>
@@ -219,16 +262,16 @@ const SingleProduct = () => {
       <Container class1="reviews-wrapper home-wrapper-2">
         <div className="row">
           <div className="col-12">
-            <h3 id="review">Reviews</h3>
+            <h3 id="review">Đánh giá</h3>
             <div className="review-inner-wrapper">
               <div className="review-head d-flex justify-content-between align-items-end">
                 <div>
-                  <h4 className="mb-2">Customer Reviews</h4>
+                  <h4 className="mb-2">Đánh giá của khách hàng</h4>
                   <div className="d-flex align-items-center gap-10">
                     <ReactStars
                       count={5}
                       size={24}
-                      value={4}
+                      value={productState?.totalrating?.toString()}
                       edit={false}
                       activeColor="#ffd700"
                     />
@@ -238,7 +281,7 @@ const SingleProduct = () => {
                 {orderedProduct && (
                   <div>
                     <a className="text-dark text-decoration-underline" href="">
-                      Write a Review
+                      Viết đánh giá
                     </a>
                   </div>
                 )}
@@ -266,7 +309,7 @@ const SingleProduct = () => {
                     ></textarea>
                   </div>
                   <div className="d-flex justify-content-end">
-                    <button className="button border-0">Submit Review</button>
+                    <button className="button border-0">Viết đánh giá</button>
                   </div>
                 </form>
               </div>

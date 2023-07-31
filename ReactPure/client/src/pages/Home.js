@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 //img
 import catbanner1 from "../images/catbanner-01.jpg";
 import catbanner2 from "../images/catbanner-02.jpg";
@@ -47,6 +47,7 @@ const Home = () => {
   const blogState = useSelector((state) => state?.blog?.blog);
   const productsState = useSelector((state) => state?.product?.product);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   useEffect(() => {
     getProducts();
     getBlogs();
@@ -336,14 +337,14 @@ const Home = () => {
                               edit={false}
                               activeColor="#ffd700"
                             />
-                            <p className="price">{item.price}</p>
+                            <p className="price">{item?.price}</p>
                           </div>
                           <div className="action-bar position-absolute">
                             <div className="d-flex flex-column gap-15">
                               <Link>
                                 <img src={CompareImg} alt="compare" />
                               </Link>
-                              <Link>
+                              <Link to={`product/${item?._id}`}>
                                 <img src={ViewImg} alt="view" />
                               </Link>
                               <Link>
@@ -374,6 +375,7 @@ const Home = () => {
                   return (
                     <SpecialProduct
                       key={index}
+                      id={item?._id}
                       title={item?.title}
                       brand={item?.brand}
                       totalrating={item.totalrating.toString()}
