@@ -17,6 +17,7 @@ let schema = yup.object().shape({
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const authState = useSelector((state) => state.auth);
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -26,17 +27,9 @@ const Login = () => {
     onSubmit: (values) => {
       //alert(JSON.stringify(values, null, 2));
       dispatch(login(values));
+      navigate("/");
     },
   });
-  const authState = useSelector((state) => state);
-
-  const { user, isError, isSuccess, isLoading, message } = authState.auth;
-
-  useEffect(() => {
-    if (user || isSuccess) {
-      navigate("/");
-    }
-  }, [user, isError, isSuccess, isLoading]);
   return (
     <>
       <Meta title={"Login"} />

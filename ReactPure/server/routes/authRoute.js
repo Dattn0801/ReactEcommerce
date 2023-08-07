@@ -33,7 +33,7 @@ const {
 } = require("../controller/userCTL");
 
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
-
+const { paymentVerification, checkout } = require("../controller/paymentCTL");
 router.get("/getallorders", authMiddleware, isAdmin, getAllOrders);
 router.get("/profile", authMiddleware, getUserProfile);
 router.get("/all-users", getallUser);
@@ -49,7 +49,11 @@ router.put("/address", authMiddleware, isAdmin, saveAddress);
 
 router.get("/cart/", authMiddleware, getUserCart);
 router.post("/cart", authMiddleware, userCart);
+
 router.delete("/cart/:id", authMiddleware, emptyCart);
+
+router.post("/order/checkout", authMiddleware, checkout);
+router.post("/order/paymentVerification", authMiddleware, paymentVerification);
 
 router.delete(
   "/delete-product-cart/:cartItemId",
@@ -61,8 +65,9 @@ router.delete(
   authMiddleware,
   updateProductQuantityFromCart
 );
+
 router.post("/cart/applycoupon", authMiddleware, applyCoupon);
-router.post("/cart/cash-order", authMiddleware, createOrder);
+router.post("/cart/create-order", authMiddleware, createOrder);
 router.get("/orders", authMiddleware, getOrders);
 router.post("/register", createUser);
 router.get("/:id", authMiddleware, isAdmin, getaUser);

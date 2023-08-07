@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authService } from "./userService";
 import { toast } from "react-toastify";
-import Login from "../../pages/Login";
 
 export const registerUser = createAsyncThunk(
   "auth/register",
@@ -73,6 +72,17 @@ export const updateCartProduct = createAsyncThunk(
     }
   }
 );
+
+export const createOrder = createAsyncThunk(
+  "user/cart/create-order",
+  async (orderDetail, thunkAPI) => {
+    try {
+      return await authService.createOrder(orderDetail);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 const initialState = {
   user: "",
   isError: false,
@@ -93,7 +103,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.createUser = action.payload;
+        state.user = action.payload;
         if (state.isSuccess === true) {
           toast.info("user created");
         }
@@ -113,10 +123,10 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        state.createUser = action.payload;
+        state.user = action.payload;
         if (state.isSuccess === true) {
           localStorage.setItem("token", action.payload.token);
-          toast.info("login success");
+          toast.info("Đăng nhập thành công");
         }
       })
       .addCase(login.rejected, (state, action) => {
@@ -124,7 +134,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.message = action.error;
         if (state.isError === true) {
-          toast.error(" login error");
+          toast.error("Đăng nhập thất bại");
         }
       })
       .addCase(getUserWislist.pending, (state) => {
@@ -215,6 +225,27 @@ export const authSlice = createSlice({
         state.message = action.error;
         if (state.isError === true) {
           toast.error("Cập nhật giỏ hàng thất bại");
+        }
+      })
+      .addCase(createOrder.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createOrder.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.orderedProduct = action.payload;
+        if (state.isSuccess === true) {
+          toast.success("Đặt hàng thành công");
+        }
+      })
+      .addCase(createOrder.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+        if (state.isError === true) {
+          toast.error("Đặt hàng thất bại");
         }
       });
   },

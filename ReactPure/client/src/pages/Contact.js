@@ -19,10 +19,13 @@ const Contact = () => {
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
-      name: "",
-      mobile: "",
-      email: "",
-      comment: "",
+      firstName: "",
+      lastName: "",
+      address: "",
+      state: "",
+      city: "",
+      country: "",
+      pincode: "",
     },
     validationSchema: contactSchema,
     onSubmit: (values) => {

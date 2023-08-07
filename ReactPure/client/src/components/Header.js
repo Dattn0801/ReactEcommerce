@@ -12,7 +12,8 @@ const Header = () => {
   // const { user } = authState.auth;
   const [total, setTotalAmount] = useState(null);
   const dispatch = useDispatch();
-  const userCartState = useSelector((state) => state.auth?.cartProducts);
+  const userCartState = useSelector((state) => state?.auth?.cartProducts);
+  const authState = useSelector((state) => state?.auth);
   useEffect(() => {
     let sum = 0;
     for (let i = 0; i < userCartState?.length; i++) {
@@ -89,13 +90,19 @@ const Header = () => {
                 </div>
                 <div>
                   <Link
-                    to="/login"
+                    to={authState?.user === "" ? "/login" : "#"}
                     className="d-flex align-items-center gap-10 text-white"
                   >
                     <img src={user} alt="user" />
-                    <p className="mb-0">
-                      Đăng nhập <br /> Tài khoản
-                    </p>
+                    {authState?.user === "" ? (
+                      <p className="mb-0">
+                        Đăng nhập <br /> Tài khoản
+                      </p>
+                    ) : (
+                      <p className="mb-0">
+                        Xin chào <br /> {authState?.user?.firstname}
+                      </p>
+                    )}
                   </Link>
                 </div>
                 <div>
