@@ -191,15 +191,14 @@ exports.deleteaUser = asyncHandler(async (req, res) => {
 
 // Update a user
 exports.updatedUser = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.user;
   validateMongoDbId(id);
-
   try {
     const updatedUser = await User.findByIdAndUpdate(
       id,
       {
-        firstname: req?.body?.firstname,
-        lastname: req?.body?.lastname,
+        firstname: req?.body?.firstName,
+        lastname: req?.body?.lastName,
         email: req?.body?.email,
         mobile: req?.body?.mobile,
       },
@@ -207,6 +206,7 @@ exports.updatedUser = asyncHandler(async (req, res) => {
         new: true,
       }
     );
+    console.log(updatedUser);
     res.json(updatedUser);
   } catch (error) {
     throw new Error(error);
@@ -385,9 +385,7 @@ exports.getUserCart = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   validateMongoDbId(_id);
   try {
-    const cart = await Cart.find({ userId: _id })
-      .populate("productId")
-      .populate("color");
+    const cart = await Cart.find({ userId: _id }).populate("productId").populate("color");
     res.json(cart);
   } catch (error) {
     throw new Error(error);
@@ -430,13 +428,7 @@ exports.updateProductQuantityFromCart = asyncHandler(async (req, res) => {
 });
 
 exports.createOrder = asyncHandler(async (req, res) => {
-  const {
-    shippingInfo,
-    orderItems,
-    totalPrice,
-    totalPriceAfterDiscount,
-    paymentInfo,
-  } = req.body;
+  const { shippingInfo, orderItems, totalPrice, totalPriceAfterDiscount, paymentInfo } = req.body;
   const { _id } = req.user;
   validateMongoDbId(_id);
   try {
@@ -453,7 +445,6 @@ exports.createOrder = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
-
 //empty cart
 exports.emptyCart = asyncHandler(async (req, res) => {
   const { _id } = req.user;
@@ -479,15 +470,8 @@ exports.applyCoupon = asyncHandler(async (req, res) => {
   let { cartTotal } = await Cart.findOne({
     orderby: user._id,
   }).populate("products.product");
-  let totalAfterDiscount = (
-    cartTotal -
-    (cartTotal * validCoupon.discount) / 100
-  ).toFixed(2);
-  await Cart.findOneAndUpdate(
-    { orderby: user._id },
-    { totalAfterDiscount },
-    { new: true }
-  );
+  let totalAfterDiscount = (cartTotal - (cartTotal * validCoupon.discount) / 100).toFixed(2);
+  await Cart.findOneAndUpdate({ orderby: user._id }, { totalAfterDiscount }, { new: true });
   res.json(totalAfterDiscount);
 });
 
@@ -534,15 +518,27 @@ exports.applyCoupon = asyncHandler(async (req, res) => {
 //   }
 // });
 
+exports.myOrders = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  try {
+    const orders = await Order.find({ user: _id })
+      .populate("user")
+      .populate("orderItems.product")
+      .populate("orderItems.color");
+    res.json({
+      orders,
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
 //get order
 exports.getOrders = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   validateMongoDbId(_id);
   try {
-    const userorders = await Order.findOne({ orderby: _id })
-      .populate("products.product")
-      .populate("orderby")
-      .exec();
+    const userorders = await Order.findOne({ orderby: _id }).populate("products.product").populate("orderby").exec();
     res.json(userorders);
   } catch (error) {
     throw new Error(error);
@@ -552,10 +548,7 @@ exports.getOrders = asyncHandler(async (req, res) => {
 exports.getAllOrders = asyncHandler(async (req, res) => {
   console.log("assd");
   try {
-    const alluserorders = await Order.find()
-      .populate("products.product")
-      .populate("orderby")
-      .exec();
+    const alluserorders = await Order.find().populate("products.product").populate("orderby").exec();
     console.log(alluserorders);
     res.json(alluserorders);
   } catch (error) {
@@ -567,10 +560,7 @@ exports.getOrderByUserId = asyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongoDbId(id);
   try {
-    const userorders = await Order.findOne({ orderby: id })
-      .populate("products.product")
-      .populate("orderby")
-      .exec();
+    const userorders = await Order.findOne({ orderby: id }).populate("products.product").populate("orderby").exec();
     res.json(userorders);
   } catch (error) {
     throw new Error(error);

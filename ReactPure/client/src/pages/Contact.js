@@ -19,13 +19,10 @@ const Contact = () => {
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      address: "",
-      state: "",
-      city: "",
-      country: "",
-      pincode: "",
+      name: "",
+      email: "",
+      mobile: "",
+      comment: "",
     },
     validationSchema: contactSchema,
     onSubmit: (values) => {
@@ -53,11 +50,7 @@ const Contact = () => {
             <div className="contact-inner-wrapper d-flex justify-content-between ">
               <div>
                 <h3 className="contact-title mb-4">Liên hệ</h3>
-                <form
-                  action=""
-                  onSubmit={formik.handleSubmit}
-                  className="d-flex flex-column gap-15"
-                >
+                <form action="" onSubmit={formik.handleSubmit} className="d-flex flex-column gap-15">
                   <div>
                     <input
                       type="text"
@@ -68,9 +61,7 @@ const Contact = () => {
                       onBlur={formik.handleBlur("name")}
                       value={formik.values.name}
                     />
-                    <div className="errors">
-                      {formik.touched.name && formik.errors.name}
-                    </div>
+                    <div className="errors">{formik.touched.name && formik.errors.name}</div>
                   </div>
                   <div>
                     <input
@@ -82,9 +73,7 @@ const Contact = () => {
                       onBlur={formik.handleBlur("email")}
                       value={formik.values.email}
                     />
-                    <div className="errors">
-                      {formik.touched.email && formik.errors.email}
-                    </div>
+                    <div className="errors">{formik.touched.email && formik.errors.email}</div>
                   </div>
                   <div>
                     <input
@@ -96,9 +85,7 @@ const Contact = () => {
                       onBlur={formik.handleBlur("mobile")}
                       value={formik.values.mobile}
                     />
-                    <div className="errors">
-                      {formik.touched.mobile && formik.errors.mobile}
-                    </div>
+                    <div className="errors">{formik.touched.mobile && formik.errors.mobile}</div>
                   </div>
                   <div>
                     <textarea
@@ -112,9 +99,7 @@ const Contact = () => {
                       onBlur={formik.handleBlur("comment")}
                       value={formik.values.comment}
                     ></textarea>
-                    <div className="errors">
-                      {formik.touched.comment && formik.errors.comment}
-                    </div>
+                    <div className="errors">{formik.touched.comment && formik.errors.comment}</div>
                   </div>
                   <div>
                     <button className="button border-0">Gửi</button>
@@ -127,9 +112,7 @@ const Contact = () => {
                   <ul className="ps-0">
                     <li className="mb-3 d-flex gap-15 align-items-center">
                       <AiOutlineHome className="fs-5" />
-                      <address className="mb-0">
-                        7 ,Trương Thị Kiện,Thái Mỹ,Củ Chi, Hồ Chí Minh
-                      </address>
+                      <address className="mb-0">7 ,Trương Thị Kiện,Thái Mỹ,Củ Chi, Hồ Chí Minh</address>
                     </li>
                     <li className="mb-3 d-flex gap-15 align-items-center">
                       <BiPhoneCall className="fs-5" />
@@ -137,9 +120,7 @@ const Contact = () => {
                     </li>
                     <li className="mb-3 d-flex gap-15 align-items-center">
                       <AiOutlineMail className="fs-5" />
-                      <a href="mailto:thanhdat08011999@gmail.com">
-                        thanhdat08011999@gmail.com
-                      </a>
+                      <a href="mailto:thanhdat08011999@gmail.com">thanhdat08011999@gmail.com</a>
                     </li>
                     <li className="mb-3 d-flex gap-15 align-items-center">
                       <BiInfoCircle className="fs-5" />

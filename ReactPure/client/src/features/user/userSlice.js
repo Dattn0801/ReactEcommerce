@@ -2,87 +2,77 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { authService } from "./userService";
 import { toast } from "react-toastify";
 
-export const registerUser = createAsyncThunk(
-  "auth/register",
-  async (userData, thunkAPI) => {
-    try {
-      return await authService.register(userData);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
+export const registerUser = createAsyncThunk("auth/register", async (userData, thunkAPI) => {
+  try {
+    return await authService.register(userData);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
   }
-);
-export const login = createAsyncThunk(
-  "auth/login",
-  async (userData, thunkAPI) => {
-    try {
-      return await authService.login(userData);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
+});
+export const login = createAsyncThunk("auth/login", async (userData, thunkAPI) => {
+  try {
+    return await authService.login(userData);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
   }
-);
-export const getUserWislist = createAsyncThunk(
-  "user/wishlist",
-  async (thunkAPI) => {
-    try {
-      return await authService.getUserWislist();
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
+});
+export const getUserWislist = createAsyncThunk("user/wishlist", async (thunkAPI) => {
+  try {
+    return await authService.getUserWislist();
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
   }
-);
-export const addProductToCart = createAsyncThunk(
-  "user/cart/add",
-  async (cartData, thunkAPI) => {
-    try {
-      return await authService.addToCart(cartData);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
+});
+export const addProductToCart = createAsyncThunk("user/cart/add", async (cartData, thunkAPI) => {
+  try {
+    return await authService.addToCart(cartData);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
   }
-);
-export const getUserCart = createAsyncThunk(
-  "user/cart/get",
-  async (thunkAPI) => {
-    try {
-      return await authService.getCart();
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
+});
+export const getUserCart = createAsyncThunk("user/cart/get", async (thunkAPI) => {
+  try {
+    return await authService.getCart();
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
   }
-);
-export const deleteCartProduct = createAsyncThunk(
-  "user/cart/product/delete",
-  async (cartItemId, thunkAPI) => {
-    try {
-      return await authService.removeProductFromCart(cartItemId);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
+});
+export const deleteCartProduct = createAsyncThunk("user/cart/product/delete", async (cartItemId, thunkAPI) => {
+  try {
+    return await authService.removeProductFromCart(cartItemId);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
   }
-);
-export const updateCartProduct = createAsyncThunk(
-  "user/cart/product/update",
-  async (cartDetail, thunkAPI) => {
-    try {
-      return await authService.updateProductFromCart(cartDetail);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
+});
+export const updateCartProduct = createAsyncThunk("user/cart/product/update", async (cartDetail, thunkAPI) => {
+  try {
+    return await authService.updateProductFromCart(cartDetail);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
   }
-);
+});
 
-export const createOrder = createAsyncThunk(
-  "user/cart/create-order",
-  async (orderDetail, thunkAPI) => {
-    try {
-      return await authService.createOrder(orderDetail);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
+export const createOrder = createAsyncThunk("user/cart/create-order", async (orderDetail, thunkAPI) => {
+  try {
+    return await authService.createOrder(orderDetail);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
   }
-);
+});
+export const getUserOrders = createAsyncThunk("user/orders/get", async (thunkAPI) => {
+  try {
+    return await authService.userOrders();
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
+  }
+});
+export const updateProfile = createAsyncThunk("user/profile/update", async (userData, thunkAPI) => {
+  try {
+    return await authService.updateUser(userData);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
+  }
+});
 const initialState = {
   user: "",
   isError: false,
@@ -246,6 +236,42 @@ export const authSlice = createSlice({
         state.message = action.error;
         if (state.isError === true) {
           toast.error("Đặt hàng thất bại");
+        }
+      })
+      .addCase(getUserOrders.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getUserOrders.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.userOrders = action.payload;
+      })
+      .addCase(getUserOrders.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
+      .addCase(updateProfile.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.updateuser = action.payload;
+        if (state.isSuccess === true) {
+          toast.success("Cập nhật thông tin thành công");
+        }
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+        if (state.isError === true) {
+          toast.error("Cập nhật thông tin thất bại");
         }
       });
   },

@@ -8,8 +8,6 @@ import user from "../images/user.svg";
 import cart from "../images/cart.svg";
 import menu from "../images/menu.svg";
 const Header = () => {
-  // const authState = useSelector((state) => state);
-  // const { user } = authState.auth;
   const [total, setTotalAmount] = useState(null);
   const dispatch = useDispatch();
   const userCartState = useSelector((state) => state?.auth?.cartProducts);
@@ -21,15 +19,19 @@ const Header = () => {
       setTotalAmount(sum);
     }
   }, [userCartState]);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
+
   return (
     <>
       <header className="header-top-strip py-3">
         <div className="container-xxl">
           <div className="row">
             <div className="col-6">
-              <p className="text-white mb-0">
-                Free Shipping Over $100 & Free Returns
-              </p>
+              <p className="text-white mb-0">Free Shipping Over $100 & Free Returns</p>
             </div>
             <div className="col-6">
               <p className="text-end text-white mb-0">
@@ -67,10 +69,7 @@ const Header = () => {
             <div className="col-5">
               <div className="header-upper-links d-flex align-items-center justify-content-between">
                 <div>
-                  <Link
-                    to="/compare-product"
-                    className="d-flex align-items-center gap-10 text-white"
-                  >
+                  <Link to="/compare-product" className="d-flex align-items-center gap-10 text-white">
                     <img src={compare} alt="compare" />
                     <p className="mb-0">
                       So sánh <br /> Sản phẩm
@@ -78,10 +77,7 @@ const Header = () => {
                   </Link>
                 </div>
                 <div>
-                  <Link
-                    to="/wishlist"
-                    className="d-flex align-items-center gap-10 text-white"
-                  >
+                  <Link to="/wishlist" className="d-flex align-items-center gap-10 text-white">
                     <img src={wishlist} alt="wishlist" />
                     <p className="mb-0">
                       Sản phẩm <br /> Yêu thích
@@ -90,7 +86,7 @@ const Header = () => {
                 </div>
                 <div>
                   <Link
-                    to={authState?.user === "" ? "/login" : "#"}
+                    to={authState?.user === "" ? "/login" : "/my-profile"}
                     className="d-flex align-items-center gap-10 text-white"
                   >
                     <img src={user} alt="user" />
@@ -106,10 +102,7 @@ const Header = () => {
                   </Link>
                 </div>
                 <div>
-                  <Link
-                    to="/cart"
-                    className="d-flex align-items-center gap-10 text-white"
-                  >
+                  <Link to="/cart" className="d-flex align-items-center gap-10 text-white">
                     <img src={cart} alt="cart" />
                     <div className="d-flex flex-column gap-10">
                       <span className="badge bg-white text-dark">
@@ -141,10 +134,7 @@ const Header = () => {
                       <img src={menu} alt="" />
                       <span className="me-5 d-inline-block">Danh mục</span>
                     </button>
-                    <ul
-                      className="dropdown-menu"
-                      aria-labelledby="dropdownMenuButton1"
-                    >
+                    <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                       <li>
                         <Link className="dropdown-item text-white" to="">
                           Action
@@ -167,8 +157,12 @@ const Header = () => {
                   <div className="d-flex align-items-center gap-15">
                     <NavLink to="/">Trang chủ</NavLink>
                     <NavLink to="/product">Sản phẩm</NavLink>
+                    <NavLink to="/my-orders">Đơn hàng</NavLink>
                     <NavLink to="/blogs">Blogs</NavLink>
                     <NavLink to="/contact">Liên hệ</NavLink>
+                    <button onClick={handleLogout} className="border border-0 bg-transparent text-white" type="button">
+                      Đăng xuất
+                    </button>
                   </div>
                 </div>
               </div>

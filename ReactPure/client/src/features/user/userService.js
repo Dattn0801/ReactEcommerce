@@ -9,7 +9,6 @@ const login = async (userData) => {
   const response = await axios.post(`${base_url}user/login`, userData);
   if (response.data) {
     localStorage.setItem("user", JSON.stringify(response.data));
-    console.log(response.data);
   }
   return response.data;
 };
@@ -32,10 +31,7 @@ const getCart = async () => {
   }
 };
 const removeProductFromCart = async (cartItemId) => {
-  const response = await axios.delete(
-    `${base_url}user/delete-product-cart/${cartItemId}`,
-    config
-  );
+  const response = await axios.delete(`${base_url}user/delete-product-cart/${cartItemId}`, config);
   if (response.data) {
     return response.data;
   }
@@ -52,16 +48,25 @@ const updateProductFromCart = async (cartDetail) => {
 };
 
 const createOrder = async (orderDetail) => {
-  const response = await axios.post(
-    `${base_url}user/cart/create-order`,
-    orderDetail,
-    config
-  );
+  const response = await axios.post(`${base_url}user/cart/create-order`, orderDetail, config);
   if (response.data) {
     return response.data;
   }
 };
 
+const userOrders = async () => {
+  const response = await axios.get(`${base_url}user/get-myorders`, config);
+  if (response.data) {
+    console.log(response.data);
+    return response.data;
+  }
+};
+const updateUser = async (userData) => {
+  const response = await axios.put(`${base_url}user/edit-user`, userData, config);
+  if (response.data) {
+    return response.data;
+  }
+};
 export const authService = {
   register,
   login,
@@ -71,4 +76,6 @@ export const authService = {
   removeProductFromCart,
   updateProductFromCart,
   createOrder,
+  userOrders,
+  updateUser,
 };
