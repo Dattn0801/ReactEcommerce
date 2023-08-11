@@ -12,8 +12,8 @@ const login = async (userData) => {
   }
   return response.data;
 };
-const getUserWislist = async () => {
-  const response = await axios.get(`${base_url}user/wishlist`, config);
+const getUserWislist = async (config2) => {
+  const response = await axios.get(`${base_url}user/wishlist`, config2);
   if (response.data) {
     return response.data;
   }
@@ -24,14 +24,14 @@ const addToCart = async (cartData) => {
     return response.data;
   }
 };
-const getCart = async () => {
-  const response = await axios.get(`${base_url}user/cart`, config);
+const getCart = async (config2) => {
+  const response = await axios.get(`${base_url}user/cart`, config2);
   if (response.data) {
     return response.data;
   }
 };
-const removeProductFromCart = async (cartItemId) => {
-  const response = await axios.delete(`${base_url}user/delete-product-cart/${cartItemId}`, config);
+const removeProductFromCart = async (data) => {
+  const response = await axios.delete(`${base_url}user/delete-product-cart/${data?.id}`, data?.config2);
   if (response.data) {
     return response.data;
   }
@@ -40,7 +40,7 @@ const removeProductFromCart = async (cartItemId) => {
 const updateProductFromCart = async (cartDetail) => {
   const response = await axios.delete(
     `${base_url}user/update-product-cart/${cartDetail.cartItemId}/${cartDetail.quantity}`,
-    config
+    cartDetail.config2
   );
   if (response.data) {
     return response.data;
@@ -54,15 +54,32 @@ const createOrder = async (orderDetail) => {
   }
 };
 
-const userOrders = async () => {
-  const response = await axios.get(`${base_url}user/get-myorders`, config);
+const userOrders = async (config2) => {
+  const response = await axios.get(`${base_url}user/get-myorders`, config2);
   if (response.data) {
-    console.log(response.data);
     return response.data;
   }
 };
-const updateUser = async (userData) => {
-  const response = await axios.put(`${base_url}user/edit-user`, userData, config);
+const updateUser = async (data) => {
+  const response = await axios.put(`${base_url}user/edit-user`, data?.data, data?.config2);
+  if (response.data) {
+    return response.data;
+  }
+};
+const forgotPassToken = async (data) => {
+  const response = await axios.post(`${base_url}user/forgot-password-token`, data);
+  if (response.data) {
+    return response.data;
+  }
+};
+const resetPass = async (data) => {
+  const response = await axios.put(`${base_url}user/reset-password/${data?.token}`, { password: data?.password }, data);
+  if (response.data) {
+    return response.data;
+  }
+};
+const emtyCart = async (config2) => {
+  const response = await axios.delete(`${base_url}user/empty-cart`, config2);
   if (response.data) {
     return response.data;
   }
@@ -78,4 +95,7 @@ export const authService = {
   createOrder,
   userOrders,
   updateUser,
+  forgotPassToken,
+  resetPass,
+  emtyCart,
 };
