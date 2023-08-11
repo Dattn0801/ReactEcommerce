@@ -3,26 +3,29 @@ import { useDispatch, useSelector } from "react-redux";
 
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
+import Container from "../components/Container";
 import watch from "../images/watch.jpg";
 import { AiFillDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import Container from "../components/Container";
 
-import {
-  updateCartProduct,
-  deleteCartProduct,
-  getUserCart,
-} from "../features/user/userSlice";
+import { updateCartProduct, deleteCartProduct, getUserCart } from "../features/user/userSlice";
 
 const Cart = () => {
-  const dispatch = useDispatch();
+  const getTokenFromLocalStorage = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+  const config2 = {
+    headers: {
+      Authorization: `Bearer ${getTokenFromLocalStorage !== null ? getTokenFromLocalStorage.token : ""}`,
+      Accept: "application/json",
+    },
+  };
 
+  const dispatch = useDispatch();
   const [productUpdateDetail, setProductUpdateDetail] = useState(null);
   const [totalAmount, setTotalAmount] = useState(null);
   const userCartState = useSelector((state) => state.auth?.cartProducts);
 
   useEffect(() => {
-    dispatch(getUserCart());
+    dispatch(getUserCart(config2));
   }, []);
   useEffect(() => {
     if (productUpdateDetail !== null) {
@@ -30,15 +33,20 @@ const Cart = () => {
         updateCartProduct({
           cartItemId: productUpdateDetail?.cartItemId,
           quantity: productUpdateDetail?.quantity,
+          config2: config2,
         })
       );
-      dispatch(getUserCart());
+      setTimeout(() => {
+        dispatch(getUserCart(config2));
+      }, 300);
     }
   }, [productUpdateDetail]);
 
   const deleteItemInCart = (id) => {
-    dispatch(deleteCartProduct(id));
-    dispatch(getUserCart());
+    dispatch(deleteCartProduct({ id: id, config2: config2 }));
+    setTimeout(() => {
+      dispatch(getUserCart(config2));
+    }, 300);
   };
   useEffect(() => {
     let sum = 0;
@@ -68,11 +76,7 @@ const Cart = () => {
                     <div className="cart-col-1 gap-15 d-flex align-items-center">
                       <div className="w-25">
                         <img
-                          src={
-                            item?.productId?.images[0]?.url
-                              ? item?.productId?.images[0]?.url
-                              : watch
-                          }
+                          src={item?.productId?.images[0]?.url ? item?.productId?.images[0]?.url : watch}
                           className="img-fluid"
                           alt="product image"
                         />
@@ -83,17 +87,13 @@ const Cart = () => {
                         <div className="d-flex gap-3">
                           Màu:
                           <ul className="colors ps-0">
-                            <li
-                              style={{ backgroundColor: item?.color.title }}
-                            ></li>
+                            <li style={{ backgroundColor: item?.color.title }}></li>
                           </ul>
                         </div>
                       </div>
                     </div>
                     <div className="cart-col-2">
-                      <h5 className="price">
-                        {item?.price?.toLocaleString("vi-VN")} vnđ
-                      </h5>
+                      <h5 className="price">{item?.price?.toLocaleString("vi-VN")} vnđ</h5>
                     </div>
                     <div className="cart-col-3 d-flex align-items-center gap-15">
                       <div>
@@ -103,12 +103,8 @@ const Cart = () => {
                           name=""
                           min={1}
                           max={10}
-                          id=""
-                          value={
-                            productUpdateDetail?.quantity
-                              ? productUpdateDetail?.quantity
-                              : item?.quantity
-                          }
+                          id={"cart" + item?._id}
+                          value={item?.quantity}
                           onChange={(e) => {
                             setProductUpdateDetail({
                               cartItemId: item?._id,
@@ -127,10 +123,7 @@ const Cart = () => {
                       </div>
                     </div>
                     <div className="cart-col-4">
-                      <h5 className="price">
-                        {(item?.price * item?.quantity).toLocaleString("vi-VN")}{" "}
-                        vnđ
-                      </h5>
+                      <h5 className="price">{(item?.price * item?.quantity).toLocaleString("vi-VN")} vnđ</h5>
                     </div>
                   </div>
                 );

@@ -12,23 +12,25 @@ import CompareImg from "../images/prodcompare.svg";
 import Wishlist from "../images/wish.svg";
 
 const ProductCard = (props) => {
+  const getTokenFromLocalStorage = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+  const config2 = {
+    headers: {
+      Authorization: `Bearer ${getTokenFromLocalStorage !== null ? getTokenFromLocalStorage.token : ""}`,
+      Accept: "application/json",
+    },
+  };
   const { grid, data } = props;
 
   let location = useLocation();
   const dispatch = useDispatch();
   const addToWish = (id) => {
-    dispatch(addToWishList(id));
+    dispatch(addToWishList({ id: id, config2: config2 }));
   };
   return (
     <>
       {data?.map((item, index) => {
         return (
-          <div
-            key={index}
-            className={` ${
-              location.pathname == "/product" ? `gr-${grid}` : "col-3"
-            } `}
-          >
+          <div key={index} className={` ${location.pathname == "/product" ? `gr-${grid}` : "col-3"} `}>
             <div className="product-card position-relative">
               <div className="wishlist-icon position-absolute">
                 <button
@@ -41,16 +43,8 @@ const ProductCard = (props) => {
                 </button>
               </div>
               <div className="product-image">
-                <img
-                  src={item?.images[0]?.url}
-                  className="img-fluid mx-auto"
-                  alt="product image"
-                />
-                <img
-                  src={item?.images[1]?.url}
-                  className="img-fluid mx-auto"
-                  alt="product image"
-                />
+                <img src={item?.images[0]?.url} className="img-fluid mx-auto" alt="product image" />
+                <img src={item?.images[1]?.url} className="img-fluid mx-auto" alt="product image" />
               </div>
               <div className="product-details pt-2">
                 <h6 className="brand">{item?.brand}</h6>
@@ -63,9 +57,7 @@ const ProductCard = (props) => {
                   activeColor="#ffd700"
                 />
                 <p
-                  className={`description ${
-                    grid === 12 ? "d-block" : "d-none"
-                  }`}
+                  className={`description ${grid === 12 ? "d-block" : "d-none"}`}
                   dangerouslySetInnerHTML={{ __html: item?.description }}
                 ></p>
                 <p className="price">{item?.price}</p>

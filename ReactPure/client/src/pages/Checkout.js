@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
 import watch from "../images/watch.jpg";
 import Container from "../components/Container";
 
-import { createOrder, getUserCart } from "../features/user/userSlice";
+import { createOrder, deleteUserCart, getUserCart } from "../features/user/userSlice";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
@@ -21,7 +21,15 @@ const shippingSchema = yup.object({
   other: yup.string().required("Cần thành phố"),
 });
 const Checkout = () => {
+  const getTokenFromLocalStorage = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+  const config2 = {
+    headers: {
+      Authorization: `Bearer ${getTokenFromLocalStorage !== null ? getTokenFromLocalStorage.token : ""}`,
+      Accept: "application/json",
+    },
+  };
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [totalAmount, setTotalAmount] = useState(null);
   const [shippingInfo, setShippingInfor] = useState(null);
   const [paymentInfo, setPaymentInfo] = useState({
@@ -31,6 +39,7 @@ const Checkout = () => {
   const [cartProductState, setCartProductState] = useState([]);
   const shipping = 20000;
   const cartState = useSelector((state) => state.auth?.cartProducts);
+  const authState = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(getUserCart());
@@ -52,6 +61,11 @@ const Checkout = () => {
       setTotalAmount(sum);
     }
   }, [cartState]);
+  useEffect(() => {
+    if (authState?.orderedProduct !== null && authState?.orderedProduct?.status === true) {
+      navigate("/my-orders");
+    }
+  });
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -68,7 +82,7 @@ const Checkout = () => {
       console.log(shippingInfo);
       setTimeout(() => {
         checkoutHandler();
-      }, 300);
+      }, 1000);
     },
   });
 
@@ -86,19 +100,13 @@ const Checkout = () => {
     });
   };
   const checkoutHandler = async () => {
-    const res = await loadScript(
-      "https://checkout.razorpay.com/v1/checkout.js"
-    );
+    const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
 
     if (!res) {
       alert("Razorpay SDK failed to load. Are you online?");
       return;
     }
-    const result = await axios.post(
-      "http://localhost:8000/api/user/order/checkout",
-      "",
-      config
-    );
+    const result = await axios.post("http://localhost:8000/api/user/order/checkout", "", config);
 
     if (!result) {
       alert("sth went wrong");
@@ -120,24 +128,23 @@ const Checkout = () => {
           razorpayPaymentId: response.razorpay_payment_id,
           razorpayOrderId: response.razorpay_order_id,
         };
-        const result = await axios.post(
-          "http://localhost:8000/api/user/order/paymentVerification",
-          data,
-          config
-        );
+        const result = await axios.post("http://localhost:8000/api/user/order/paymentVerification", data, config);
         setPaymentInfo({
           razorpayPaymentId: response.razorpay_payment_id,
           razorpayOrderId: response.razorpay_order_id,
         });
-        dispatch(
-          createOrder({
-            totalPrice: totalAmount,
-            totalPriceAfterDiscount: totalAmount,
-            orderItems: cartProductState,
-            paymentInfo,
-            shippingInfo,
-          })
-        );
+        setTimeout(() => {
+          dispatch(
+            createOrder({
+              totalPrice: totalAmount,
+              totalPriceAfterDiscount: totalAmount,
+              orderItems: cartProductState,
+              paymentInfo: result.data,
+              shippingInfo,
+            })
+          );
+          dispatch(deleteUserCart(config2));
+        }, 3000);
       },
       prefill: {
         name: "DatThanhNguyen",
@@ -163,10 +170,7 @@ const Checkout = () => {
           <div className="col-7">
             <div className="checkout-left-data">
               <h3 className="website-name">DStore</h3>
-              <nav
-                style={{ "--bs-breadcrumb-divider": ">" }}
-                aria-label="breadcrumb"
-              >
+              <nav style={{ "--bs-breadcrumb-divider": ">" }} aria-label="breadcrumb">
                 <ol className="breadcrumb">
                   <li className="breadcrumb-item">
                     <Link className="text-dark total-price" to="/cart">
@@ -174,29 +178,18 @@ const Checkout = () => {
                     </Link>
                   </li>
                   &nbsp; /&nbsp;
-                  <li
-                    className="breadcrumb-ite total-price active"
-                    aria-current="page"
-                  >
+                  <li className="breadcrumb-ite total-price active" aria-current="page">
                     Thông tin
                   </li>
+                  &nbsp; /<li className="breadcrumb-item total-price active">Phí ship</li>
                   &nbsp; /
-                  <li className="breadcrumb-item total-price active">
-                    Phí ship
-                  </li>
-                  &nbsp; /
-                  <li
-                    className="breadcrumb-item total-price active"
-                    aria-current="page"
-                  >
+                  <li className="breadcrumb-item total-price active" aria-current="page">
                     Thanh toán
                   </li>
                 </ol>
               </nav>
               <h4 className="title total">Thông tin liên lạc</h4>
-              <p className="user-details total">
-                DStore (thanhdat08011999@gmail.com)
-              </p>
+              <p className="user-details total">DStore (thanhdat08011999@gmail.com)</p>
               <h4 className="mb-3">Địa chỉ nhận hàng</h4>
               <form
                 action=""
@@ -217,9 +210,7 @@ const Checkout = () => {
                     </option>
                     <option value="VietNam">VietNam</option>
                   </select>
-                  <div className="errors ms-2 my-1">
-                    {formik.touched.country && formik.errors.country}
-                  </div>
+                  <div className="errors ms-2 my-1">{formik.touched.country && formik.errors.country}</div>
                 </div>
                 <div className="flex-grow-1">
                   <input
@@ -231,9 +222,7 @@ const Checkout = () => {
                     onBlur={formik.handleBlur("firstName")}
                     value={formik.values.firstName}
                   />
-                  <div className="errors">
-                    {formik.touched.firstName && formik.errors.firstName}
-                  </div>
+                  <div className="errors">{formik.touched.firstName && formik.errors.firstName}</div>
                 </div>
                 <div className="flex-grow-1">
                   <input
@@ -245,9 +234,7 @@ const Checkout = () => {
                     onBlur={formik.handleBlur("lastName")}
                     value={formik.values.lastName}
                   />
-                  <div className="errors">
-                    {formik.touched.lastName && formik.errors.lastName}
-                  </div>
+                  <div className="errors">{formik.touched.lastName && formik.errors.lastName}</div>
                 </div>
                 <div className="w-100">
                   <input
@@ -259,9 +246,7 @@ const Checkout = () => {
                     onBlur={formik.handleBlur("address")}
                     value={formik.values.address}
                   />
-                  <div className="errors">
-                    {formik.touched.address && formik.errors.address}
-                  </div>
+                  <div className="errors">{formik.touched.address && formik.errors.address}</div>
                 </div>
                 <div className="w-100">
                   <input
@@ -273,9 +258,7 @@ const Checkout = () => {
                     onBlur={formik.handleBlur("other")}
                     value={formik.values.orther}
                   />
-                  <div className="errors">
-                    {formik.touched.other && formik.errors.other}
-                  </div>
+                  <div className="errors">{formik.touched.other && formik.errors.other}</div>
                 </div>
                 <div className="flex-grow-1">
                   <input
@@ -287,9 +270,7 @@ const Checkout = () => {
                     onBlur={formik.handleBlur("city")}
                     value={formik.values.city}
                   />
-                  <div className="errors">
-                    {formik.touched.city && formik.errors.city}
-                  </div>
+                  <div className="errors">{formik.touched.city && formik.errors.city}</div>
                 </div>
                 <div className="flex-grow-1">
                   <select
@@ -305,9 +286,7 @@ const Checkout = () => {
                     </option>
                     <option value="VietNam">HCM</option>
                   </select>
-                  <div className="errors">
-                    {formik.touched.state && formik.errors.state}
-                  </div>
+                  <div className="errors">{formik.touched.state && formik.errors.state}</div>
                 </div>
                 <div className="flex-grow-1">
                   <input
@@ -319,9 +298,7 @@ const Checkout = () => {
                     onBlur={formik.handleBlur("pincode")}
                     value={formik.values.pincode}
                   />
-                  <div className="errors">
-                    {formik.touched.pincode && formik.errors.pincode}
-                  </div>
+                  <div className="errors">{formik.touched.pincode && formik.errors.pincode}</div>
                 </div>
                 <div className="w-100">
                   <div className="d-flex justify-content-between align-items-center">
@@ -332,11 +309,7 @@ const Checkout = () => {
                     <Link to="/product" className="button">
                       Tiếp tục mua hàng
                     </Link>
-                    <button
-                      className="button"
-                      type="submit"
-                      onClick={checkoutHandler}
-                    >
+                    <button className="button" type="submit" onClick={checkoutHandler}>
                       Mua ngay
                     </button>
                   </div>
@@ -360,35 +333,22 @@ const Checkout = () => {
                           </span>
                           <img
                             className="img-fluid"
-                            src={
-                              item?.productId?.images[0]?.url
-                                ? item?.productId?.images[0]?.url
-                                : watch
-                            }
+                            src={item?.productId?.images[0]?.url ? item?.productId?.images[0]?.url : watch}
                             alt="product"
                           />
                         </div>
                         <div>
-                          <h5 className="total-price">
-                            {item?.productId?.title?.toLocaleString()}
-                          </h5>
+                          <h5 className="total-price">{item?.productId?.title?.toLocaleString()}</h5>
                           <div className="d-flex gap-3">
                             Màu:
                             <ul className="colors ps-0">
-                              <li
-                                style={{ backgroundColor: item?.color.title }}
-                              ></li>
+                              <li style={{ backgroundColor: item?.color.title }}></li>
                             </ul>
                           </div>
                         </div>
                       </div>
                       <div className="flex-grow-1">
-                        <h5 className="total">
-                          {(item?.price * item?.quantity).toLocaleString(
-                            "vi-VN"
-                          )}{" "}
-                          vnđ
-                        </h5>
+                        <h5 className="total">{(item?.price * item?.quantity).toLocaleString("vi-VN")} vnđ</h5>
                       </div>
                     </div>
                   );
@@ -397,25 +357,16 @@ const Checkout = () => {
             <div className="border-bottom py-4">
               <div className="d-flex justify-content-between align-items-center">
                 <p className="total">Số tiền</p>
-                <p className="total-price">
-                  {totalAmount?.toLocaleString("vi-VN")} vnđ
-                </p>
+                <p className="total-price">{totalAmount?.toLocaleString("vi-VN")} vnđ</p>
               </div>
               <div className="d-flex justify-content-between align-items-center">
                 <p className="mb-0 total">Chi phí vận chuyển</p>
-                <p className="mb-0 total-price">
-                  {shipping?.toLocaleString("vi-VN")} vnđ
-                </p>
+                <p className="mb-0 total-price">{shipping?.toLocaleString("vi-VN")} vnđ</p>
               </div>
             </div>
             <div className="d-flex justify-content-between align-items-center border-bootom py-4">
               <h4 className="total">Tổng tiền hàng</h4>
-              <h5 className="total-price">
-                {totalAmount
-                  ? (totalAmount + shipping).toLocaleString("vi-VN")
-                  : 0}{" "}
-                vnđ
-              </h5>
+              <h5 className="total-price">{totalAmount ? (totalAmount + shipping).toLocaleString("vi-VN") : 0} vnđ</h5>
             </div>
           </div>
         </div>

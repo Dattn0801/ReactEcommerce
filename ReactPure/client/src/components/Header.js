@@ -1,17 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { BsSearch } from "react-icons/bs";
 import compare from "../images/compare.svg";
 import wishlist from "../images/wishlist.svg";
 import user from "../images/user.svg";
 import cart from "../images/cart.svg";
 import menu from "../images/menu.svg";
+
+import { Typeahead } from "react-bootstrap-typeahead"; // ES2015
+import "react-bootstrap-typeahead/css/Typeahead.css";
+import { getAProduct, getAllProducts } from "../features/products/productSlice";
+
 const Header = () => {
-  const [total, setTotalAmount] = useState(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [total, setTotalAmount] = useState(null);
+  const [paginate, setPaginate] = useState(true);
+  const [productOption, setProductOption] = useState([]);
   const userCartState = useSelector((state) => state?.auth?.cartProducts);
+  const productState = useSelector((state) => state?.product?.product);
   const authState = useSelector((state) => state?.auth);
+  useEffect(() => {
+    getProducts();
+  }, []);
   useEffect(() => {
     let sum = 0;
     for (let i = 0; i < userCartState?.length; i++) {
@@ -19,10 +31,20 @@ const Header = () => {
       setTotalAmount(sum);
     }
   }, [userCartState]);
-
+  useEffect(() => {
+    let data = [];
+    for (let i = 0; i < productState.length; i++) {
+      const element = productState[i];
+      data.push({ id: i, prod: element?._id, name: element?.title });
+    }
+    setProductOption(data);
+  }, []);
   const handleLogout = () => {
     localStorage.clear();
     window.location.reload();
+  };
+  const getProducts = () => {
+    dispatch(getAllProducts());
   };
 
   return (
@@ -31,7 +53,7 @@ const Header = () => {
         <div className="container-xxl">
           <div className="row">
             <div className="col-6">
-              <p className="text-white mb-0">Free Shipping Over $100 & Free Returns</p>
+              <p className="text-white mb-0">Miễn phí ship với hóa đơn từ 2.000.000 vnđ</p>
             </div>
             <div className="col-6">
               <p className="text-end text-white mb-0">
@@ -54,12 +76,18 @@ const Header = () => {
             </div>
             <div className="col-5">
               <div className="input-group">
-                <input
-                  type="text"
-                  className="form-control py-2"
-                  placeholder="Search Product Here..."
-                  aria-label="Search Product Here..."
-                  aria-describedby="basic-addon2"
+                <Typeahead
+                  id="pagination-example"
+                  onPaginate={() => console.log("Results paginated")}
+                  onChange={(selected) => {
+                    navigate(`/product/${selected[0]?.prod}`);
+                    dispatch(getAProduct(selected[0]?.prod));
+                  }}
+                  options={productOption}
+                  paginate={paginate}
+                  labelKey={"name"}
+                  minLength={2}
+                  placeholder="Tìm kiếm sản phẩm..."
                 />
                 <span className="input-group-text p-3" id="basic-addon2">
                   <BsSearch className="fs-6" />
@@ -86,11 +114,11 @@ const Header = () => {
                 </div>
                 <div>
                   <Link
-                    to={authState?.user === "" ? "/login" : "/my-profile"}
+                    to={authState?.user === null ? "/login" : "/my-profile"}
                     className="d-flex align-items-center gap-10 text-white"
                   >
                     <img src={user} alt="user" />
-                    {authState?.user === "" ? (
+                    {authState?.user === null ? (
                       <p className="mb-0">
                         Đăng nhập <br /> Tài khoản
                       </p>

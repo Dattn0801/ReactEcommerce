@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import productimg from "../images/watch.jpg";
 const SpecialProduct = (props) => {
   const { id, title, brand, totalrating, price, sold, quantity, img } = props;
-  console.log((quantity / (quantity + sold)) * 100);
   return (
     <>
       <div className="col-6 mb-3">
@@ -16,16 +15,9 @@ const SpecialProduct = (props) => {
             <div className="special-product-content">
               <h5 className="brand">{brand}</h5>
               <h6 className="title">{title}</h6>
-              <ReactStars
-                count={5}
-                size={24}
-                value={totalrating}
-                edit={false}
-                activeColor="#ffd700"
-              />
+              <ReactStars count={5} size={24} value={totalrating} edit={false} activeColor="#ffd700" />
               <p className="price">
-                <span className="red-p">${price}</span> &nbsp;{" "}
-                {/* <strike>$200</strike> */}
+                <span className="red-p">${price}</span> &nbsp; {/* <strike>$200</strike> */}
               </p>
               <div className="discount-till d-flex align-items-center gap-10">
                 <p className="mb-0">

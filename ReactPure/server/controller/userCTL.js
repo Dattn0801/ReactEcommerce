@@ -15,7 +15,6 @@ const uniqid = require("uniqid");
 exports.getUserProfile = asyncHandler(async (req, res) => {
   // req.user was set in authMiddleware.js
   const user = await User.findById(req.user._id);
-  console.log(user);
   if (user) {
     res.json({
       id: user._id,
@@ -30,7 +29,6 @@ exports.getUserProfile = asyncHandler(async (req, res) => {
 // register
 exports.createUser = asyncHandler(async (req, res) => {
   const email = req.body.email;
-  console.log(email);
   const user = await User.findOne({ email: email });
   if (!user) {
     //create new user
@@ -206,7 +204,6 @@ exports.updatedUser = asyncHandler(async (req, res) => {
         new: true,
       }
     );
-    console.log(updatedUser);
     res.json(updatedUser);
   } catch (error) {
     throw new Error(error);
@@ -278,7 +275,7 @@ exports.forgotPasswordToken = asyncHandler(async (req, res) => {
   try {
     const token = await user.createPasswordResetToken();
     await user.save();
-    const resetURL = `Hi, Please follow this link to reset Your Password. This link is valid till 10 minutes from now. <a href='http://localhost:5000/api/user/reset-password/${token}'>Click Here</>`;
+    const resetURL = `Để lấy lại mật khẩu,vui lòng truy cập đường dẫn. <a href='http://localhost:3000/reset-password/${token}'>Click Here</>`;
     const data = {
       to: email,
       text: "Hey User",
@@ -446,17 +443,32 @@ exports.createOrder = asyncHandler(async (req, res) => {
   }
 });
 //empty cart
+
+// exports.emptyCart = asyncHandler(async (req, res) => {
+//   const { _id } = req.user;
+//   validateMongoDbId(_id);
+//   try {
+//     const user = await User.findOne({ _id });
+//     const cart = await Cart.findOneAndRemove({ orderby: user._id });
+//     res.json(cart);
+//   } catch (error) {
+//     throw new Error(error);
+//   }
+// });
 exports.emptyCart = asyncHandler(async (req, res) => {
   const { _id } = req.user;
+  const { cartItemId } = req.params;
   validateMongoDbId(_id);
   try {
-    const user = await User.findOne({ _id });
-    const cart = await Cart.findOneAndRemove({ orderby: user._id });
-    res.json(cart);
+    const deleteCart = await Cart.deleteMany({
+      userId: _id,
+    });
+    res.json(deleteCart);
   } catch (error) {
     throw new Error(error);
   }
 });
+
 //coupon
 exports.applyCoupon = asyncHandler(async (req, res) => {
   const { coupon } = req.body;

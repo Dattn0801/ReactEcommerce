@@ -98,7 +98,7 @@ exports.getAllProduct = asyncHandler(async (req, res) => {
       const productCount = await Product.countDocuments();
       if (skip >= productCount) throw new Error("This page does not exists");
     }
-    console.log(page, limit, skip);
+    //console.log(page, limit, skip);
 
     const product = await query;
     res.json(product);
@@ -111,13 +111,10 @@ exports.getAllProduct = asyncHandler(async (req, res) => {
 exports.addToWishlist = asyncHandler(async (req, res) => {
   const _id = req.user;
   const { prodId } = req.body;
-
-  console.log(_id);
   try {
     const user = await User.findById(_id);
     const alreadyadded = user.wishlist.find((id) => id.toString() === prodId);
     if (alreadyadded) {
-      console.log("addd");
       let user = await User.findByIdAndUpdate(
         _id,
         {
@@ -129,7 +126,6 @@ exports.addToWishlist = asyncHandler(async (req, res) => {
       );
       res.json(user);
     } else {
-      console.log("notadd");
       let user = await User.findByIdAndUpdate(
         _id,
         {
@@ -149,12 +145,11 @@ exports.addToWishlist = asyncHandler(async (req, res) => {
 exports.rating = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   const { star, prodId, comment } = req.body;
+  console.log(_id);
   console.log(req.body);
   try {
     const product = await Product.findById(prodId);
-    let alreadyRated = product.ratings.find(
-      (userId) => userId.postedby.toString() === _id.toString()
-    );
+    let alreadyRated = product.ratings.find((userId) => userId.postedby.toString() === _id.toString());
     if (alreadyRated) {
       const updateRating = await Product.updateOne(
         {
@@ -185,10 +180,8 @@ exports.rating = asyncHandler(async (req, res) => {
       );
     }
     const getallratings = await Product.findById(prodId);
-    let totalRating = getallratings.ratings.length;
-    let ratingsum = getallratings.ratings
-      .map((item) => item.star)
-      .reduce((prev, curr) => prev + curr, 0);
+    let totalRating = getallratings?.ratings?.length;
+    let ratingsum = getallratings?.ratings.map((item) => item.star).reduce((prev, curr) => prev + curr, 0);
     let actualRating = Math.round(ratingsum / totalRating);
     let finalproduct = await Product.findByIdAndUpdate(
       prodId,

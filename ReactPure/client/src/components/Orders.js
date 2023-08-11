@@ -7,10 +7,17 @@ import BreadCrumb from "../components/BreadCrumb";
 import { getUserOrders } from "../features/user/userSlice";
 
 const Orders = () => {
+  const getTokenFromLocalStorage = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+  const config2 = {
+    headers: {
+      Authorization: `Bearer ${getTokenFromLocalStorage !== null ? getTokenFromLocalStorage.token : ""}`,
+      Accept: "application/json",
+    },
+  };
   const dispatch = useDispatch();
   const orderState = useSelector((state) => state?.auth?.userOrders?.orders);
   useEffect(() => {
-    dispatch(getUserOrders());
+    dispatch(getUserOrders(config2));
   }, []);
   return (
     <>
@@ -73,7 +80,7 @@ const Orders = () => {
                                   <h6 className="text-white">{i.product?.title}</h6>
                                 </div>
                                 <div className="col-3">
-                                  <h6 className="text-white">{i.product?.quantity}</h6>
+                                  <h6 className="text-white">{i?.quantity}</h6>
                                 </div>
                                 <div className="col-3">
                                   <h6 className="text-white">{i.product?.price}</h6>
