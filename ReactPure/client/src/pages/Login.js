@@ -17,7 +17,8 @@ let schema = yup.object().shape({
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const authState = useSelector((state) => state.auth);
+  const authState = useSelector((state) => state?.auth);
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -25,11 +26,14 @@ const Login = () => {
     },
     validationSchema: schema,
     onSubmit: (values) => {
-      //alert(JSON.stringify(values, null, 2));
       dispatch(login(values));
-      navigate("/");
     },
   });
+  useEffect(() => {
+    if (authState?.user !== null && authState?.isError === false) {
+      navigate("/");
+    }
+  }, [authState]);
   return (
     <>
       <Meta title={"Login"} />
@@ -40,11 +44,7 @@ const Login = () => {
           <div className="col-12">
             <div className="auth-card">
               <h3 className="text-center mb-3">Login</h3>
-              <form
-                action=""
-                onSubmit={formik.handleSubmit}
-                className="d-flex flex-column gap-15"
-              >
+              <form action="" onSubmit={formik.handleSubmit} className="d-flex flex-column gap-15">
                 <CustomInput
                   type="text"
                   name="email"
@@ -53,9 +53,7 @@ const Login = () => {
                   onChange={formik.handleChange("email")}
                   onBlur={formik.handleBlur("email")}
                 />
-                <div className="error mt-2">
-                  {formik.touched.email && formik.errors.email}
-                </div>
+                <div className="error mt-2">{formik.touched.email && formik.errors.email}</div>
                 <CustomInput
                   type="password"
                   name="password"
@@ -64,9 +62,7 @@ const Login = () => {
                   onChange={formik.handleChange("password")}
                   onBlur={formik.handleBlur("password")}
                 />
-                <div className="error mt-2">
-                  {formik.touched.password && formik.errors.password}
-                </div>
+                <div className="error mt-2">{formik.touched.password && formik.errors.password}</div>
                 <div>
                   <Link to="/forgot-password">Forgot Password?</Link>
 
