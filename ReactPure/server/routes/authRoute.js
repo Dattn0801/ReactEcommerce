@@ -35,6 +35,8 @@ const {
 
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 const { paymentVerification, checkout } = require("../controller/paymentCTL");
+router.get("/get-myorders", authMiddleware, myOrders);
+
 router.get("/getallorders", authMiddleware, isAdmin, getAllOrders);
 router.get("/profile", authMiddleware, getUserProfile);
 router.get("/all-users", getallUser);
@@ -49,29 +51,28 @@ router.put("/wishlist", authMiddleware, addToWishList);
 router.get("/wishlist", authMiddleware, getWishlist);
 router.put("/address", authMiddleware, isAdmin, saveAddress);
 
+// router.delete("/cart/:id", authMiddleware, emptyCart);
+router.delete("/empty-cart", authMiddleware, emptyCart);
 router.get("/cart/", authMiddleware, getUserCart);
 router.post("/cart", authMiddleware, userCart);
 
-router.delete("/cart/:id", authMiddleware, emptyCart);
+router.post("/cart/applycoupon", authMiddleware, applyCoupon);
+router.post("/cart/create-order", authMiddleware, createOrder);
 
 router.post("/order/checkout", authMiddleware, checkout);
 router.post("/order/paymentVerification", authMiddleware, paymentVerification);
+router.put("/order/update-order/:id", authMiddleware, isAdmin, updateOrderStatus);
 
 router.delete("/delete-product-cart/:cartItemId", authMiddleware, removeProductFromCart);
 router.delete("/update-product-cart/:cartItemId/:newQuantity", authMiddleware, updateProductQuantityFromCart);
 
-router.post("/cart/applycoupon", authMiddleware, applyCoupon);
-router.post("/cart/create-order", authMiddleware, createOrder);
-router.get("/get-myorders", authMiddleware, myOrders);
 // router.get("/orders", authMiddleware, getOrders);
 router.post("/register", createUser);
 router.get("/:id", authMiddleware, isAdmin, getaUser);
 router.delete("/:id", authMiddleware, isAdmin, deleteaUser);
-router.put("/:id", authMiddleware, isAdmin, updatedUser);
 router.post("/admin-login", loginAdmin);
+
 router.put("/block-user/:id", authMiddleware, isAdmin, blockUser);
 router.put("/unblock-user/:id", authMiddleware, isAdmin, unblockUser);
-
-router.put("/order/update-order/:id", authMiddleware, isAdmin, updateOrderStatus);
 
 module.exports = router;
