@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import ReactStars from "react-rating-stars-component";
-
+import Container from "../components/Container";
 import ProductCard from "../components/ProductCard";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
@@ -18,14 +18,42 @@ import gr4 from "../images/gr4.svg";
 import { getAllProducts } from "../features/products/productSlice";
 
 const Ourstore = () => {
-  const [grid, setGrid] = useState(4);
-  const productsState = useSelector((state) => state?.product?.product);
   const dispatch = useDispatch();
+  const [grid, setGrid] = useState(4);
+  const [tags, setTags] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const productsState = useSelector((state) => state?.product?.product);
+
+  //filter
+  const [tag, setTag] = useState(null);
+  const [brand, setBrand] = useState(null);
+  const [category, setCategory] = useState(null);
+  const [minPrice, setMinPrice] = useState(null);
+  const [maxPrice, setMaxPrice] = useState(null);
+  const [sort, setSort] = useState(null);
+  console.log(sort);
+  useEffect(() => {
+    let newTags = [];
+    let newBrands = [];
+    let newCategory = [];
+
+    for (let index = 0; index < productsState?.length; index++) {
+      const element = productsState[index];
+      newBrands.push(element?.brand);
+      newCategory.push(element?.category);
+      newTags.push(element?.tags);
+    }
+    setTags(newTags);
+    setBrands(newBrands);
+    setCategories(newCategory);
+  }, [productsState]);
+  //console.log([...new Set(brands)], [...new Set(categories)], [...new Set(tags)]);
   useEffect(() => {
     getProducts();
-  }, []);
+  }, [sort, tag, brand, category, minPrice, maxPrice]);
   const getProducts = () => {
-    dispatch(getAllProducts());
+    dispatch(getAllProducts({ sort, tag, brand, category, minPrice, maxPrice }));
   };
   return (
     <>
@@ -36,12 +64,16 @@ const Ourstore = () => {
           <div className="row">
             <div className="col-3">
               <div className="filter-card mb-3">
-                <h3 className="filter-title"> Shop by category</h3>
+                <h3 className="filter-title"> Danh mục</h3>
                 <ul className="ps-0">
-                  <li>watch</li>
-                  <li>watch</li>
-                  <li>watch</li>
-                  <li>watch</li>
+                  {categories &&
+                    [...new Set(categories)].map((item, index) => {
+                      return (
+                        <li key={index} onClick={() => setCategory(item)}>
+                          {item}
+                        </li>
+                      );
+                    })}
                 </ul>
               </div>
               <div className="filter-card mb-3">
@@ -49,96 +81,98 @@ const Ourstore = () => {
                 <div>
                   <h5 className="sub-title">Availablity</h5>
                   <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id=""
-                    />
+                    <input className="form-check-input" type="checkbox" value="" id="" />
                     <label className="form-check-label" htmlFor="">
                       In Stock (1)
                     </label>
                   </div>
                   <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id=""
-                    />
+                    <input className="form-check-input" type="checkbox" value="" id="" />
                     <label className="form-check-label" htmlFor="">
                       Out of Stock(0)
                     </label>
                   </div>
                 </div>
-                <h5 className="sub-title">Price</h5>
+                <h5 className="sub-title">Giá</h5>
                 <div className="d-flex align-items-center gap-10">
                   <div className="form-floating">
                     <input
-                      type="email"
+                      type="number"
                       className="form-control"
                       id="floatingInput"
-                      placeholder="From"
+                      placeholder="Từ"
+                      onChange={(e) => setMinPrice(e.target.value)}
                     />
                     <label htmlFor="floatingInput">From</label>
                   </div>
                   <div className="form-floating">
                     <input
-                      type="email"
+                      type="number"
                       className="form-control"
                       id="floatingInput1"
-                      placeholder="To"
+                      placeholder="Đến"
+                      onChange={(e) => setMaxPrice(e.target.value)}
                     />
                     <label htmlFor="floatingInput1">To</label>
                   </div>
                 </div>
-                <h5 className="sub-title">Colors</h5>
+                {/* <h5 className="sub-title">Colors</h5>
                 <div>
                   <Color />
-                </div>
+                </div> */}
                 <h5 className="sub-title">Size</h5>
                 <div>
                   <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="color-1"
-                    />
+                    <input className="form-check-input" type="checkbox" value="" id="color-1" />
                     <label className="form-check-label" htmlFor="color-1">
                       S (2)
                     </label>
                   </div>
                   <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="color-2"
-                    />
+                    <input className="form-check-input" type="checkbox" value="" id="color-2" />
                     <label className="form-check-label" htmlFor="color-2">
                       M (2)
                     </label>
                   </div>
                 </div>
               </div>
-
               <div className="filter-card mb-3">
-                <h3 className="filter-title">Product Tags</h3>
+                <h3 className="filter-title">Thương hiệu</h3>
                 <div>
                   <div className="product-tags d-flex flex-wrap align-items-center gap-10">
-                    <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                      Headphone
-                    </span>
-                    <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                      Laptop
-                    </span>
-                    <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                      Mobile
-                    </span>
-                    <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                      Wire
-                    </span>
+                    {brands &&
+                      [...new Set(brands)].map((item, index) => {
+                        return (
+                          <span
+                            onClick={() => {
+                              setBrand(item);
+                            }}
+                            className="badge bg-light text-secondary rounded-3 py-2 px-3"
+                          >
+                            {item}
+                          </span>
+                        );
+                      })}
+                  </div>
+                </div>
+              </div>
+              <div className="filter-card mb-3">
+                <h3 className="filter-title">Tags</h3>
+                <div>
+                  <div className="product-tags d-flex flex-wrap align-items-center gap-10">
+                    {categories &&
+                      [...new Set(categories)].map((item, index) => {
+                        return (
+                          <span
+                            onClick={() => {
+                              setTag(item);
+                            }}
+                            className="badge bg-light text-secondary rounded-3 py-2 px-3"
+                          >
+                            {item}
+                          </span>
+                        );
+                      })}
                   </div>
                 </div>
               </div>
@@ -150,16 +184,8 @@ const Ourstore = () => {
                       <img src={img2} className="img-fluid" alt="watch" />
                     </div>
                     <div className="w-50">
-                      <h5>
-                        Kids headphones bulk 10 pack multi colored for students
-                      </h5>
-                      <ReactStars
-                        count={5}
-                        size={24}
-                        value={4}
-                        edit={false}
-                        activeColor="#ffd700"
-                      />
+                      <h5>Kids headphones bulk 10 pack multi colored for students</h5>
+                      <ReactStars count={5} size={24} value={4} edit={false} activeColor="#ffd700" />
                       <b>$ 300</b>
                     </div>
                   </div>
@@ -168,16 +194,8 @@ const Ourstore = () => {
                       <img src={img} className="img-fluid" alt="watch" />
                     </div>
                     <div className="w-50">
-                      <h5>
-                        Kids headphones bulk 10 pack multi colored for students
-                      </h5>
-                      <ReactStars
-                        count={5}
-                        size={24}
-                        value={4}
-                        edit={false}
-                        activeColor="#ffd700"
-                      />
+                      <h5>Kids headphones bulk 10 pack multi colored for students</h5>
+                      <ReactStars count={5} size={24} value={4} edit={false} activeColor="#ffd700" />
                       <b>$ 300</b>
                     </div>
                   </div>
@@ -189,34 +207,21 @@ const Ourstore = () => {
                 <div className="d-flex justify-content-between align-items-center">
                   <div className="d-flex align-items-center gap-10">
                     <p className="mb-0 d-block" style={{ width: "100px" }}>
-                      Sort By:
+                      Sắp xếp:
                     </p>
                     <select
+                      onChange={(e) => setSort(e.target.value)}
                       name=""
                       defaultValue={"manula"}
                       className="form-control form-select"
                       id=""
                     >
-                      <option value="manual">Featured</option>
-                      <option value="best-selling">Best selling</option>
-                      <option value="title-ascending">
-                        Alphabetically, A-Z
-                      </option>
-                      <option value="title-descending">
-                        Alphabetically, Z-A
-                      </option>
-                      <option value="price-ascending">
-                        Price, low to high
-                      </option>
-                      <option value="price-descending">
-                        Price, high to low
-                      </option>
-                      <option value="created-ascending">
-                        Date, old to new
-                      </option>
-                      <option value="created-descending">
-                        Date, new to old
-                      </option>
+                      <option value="-title">Tên từ A-Z</option>
+                      <option value="title">Tên từ Z-A</option>
+                      <option value="price">Giá thấp đến cao</option>
+                      <option value="-price">Giá cao đến thấp </option>
+                      <option value="createAt">Ngày đăng cũ -mới</option>
+                      <option value="-createAt">Ngày đăng mới- cũ</option>
                     </select>
                   </div>
                   <div className="d-flex align-items-center gap-10">
@@ -261,7 +266,7 @@ const Ourstore = () => {
               </div>
               <div className="products-list pb-5">
                 <div className="d-flex gap-10 flex-wrap">
-                  <ProductCard  data={productsState ?productsState:[]} grid={grid} />
+                  <ProductCard data={productsState ? productsState : []} grid={grid} />
                 </div>
               </div>
             </div>
