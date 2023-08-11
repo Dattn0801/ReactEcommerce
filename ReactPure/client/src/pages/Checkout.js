@@ -5,7 +5,7 @@ import { BiArrowBack } from "react-icons/bi";
 import watch from "../images/watch.jpg";
 import Container from "../components/Container";
 
-import { createOrder, deleteUserCart, getUserCart } from "../features/user/userSlice";
+import { createOrder, deleteUserCart, getUserCart, resetState } from "../features/user/userSlice";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
@@ -62,7 +62,7 @@ const Checkout = () => {
     }
   }, [cartState]);
   useEffect(() => {
-    if (authState?.orderedProduct !== null && authState?.orderedProduct?.status === true) {
+    if (authState?.orderedProduct?.order !== null && authState?.orderedProduct?.success === true) {
       navigate("/my-orders");
     }
   });
@@ -78,8 +78,8 @@ const Checkout = () => {
     },
     validationSchema: shippingSchema,
     onSubmit: (values) => {
-      setShippingInfor(values);
-      console.log(shippingInfo);
+      localStorage.setItem("address", JSON.stringify(values));
+      console.log(localStorage.getItem("address"));
       setTimeout(() => {
         checkoutHandler();
       }, 1000);
@@ -133,18 +133,19 @@ const Checkout = () => {
           razorpayPaymentId: response.razorpay_payment_id,
           razorpayOrderId: response.razorpay_order_id,
         });
-        setTimeout(() => {
-          dispatch(
-            createOrder({
-              totalPrice: totalAmount,
-              totalPriceAfterDiscount: totalAmount,
-              orderItems: cartProductState,
-              paymentInfo: result.data,
-              shippingInfo,
-            })
-          );
-          dispatch(deleteUserCart(config2));
-        }, 3000);
+
+        dispatch(
+          createOrder({
+            totalPrice: totalAmount,
+            totalPriceAfterDiscount: totalAmount,
+            orderItems: cartProductState,
+            paymentInfo: result.data,
+            shippingInfo: JSON.parse(localStorage.getItem("address")),
+          })
+        );
+        dispatch(deleteUserCart(config2));
+        localStorage.removeItem("address");
+        dispatch(resetState());
       },
       prefill: {
         name: "DatThanhNguyen",
