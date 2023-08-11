@@ -61,7 +61,7 @@ function App() {
               }
             />
             <Route path="blog/:id" element={<SingleBlog />} />
-            <Route path="reset-password" element={<Resetpassword />} />
+            <Route path="reset-password/:token" element={<Resetpassword />} />
             <Route path="privacy-policy" element={<PrivacyPolicy />} />
             <Route path="refund-policy" element={<RefundPloicy />} />
             <Route path="product/:id" element={<SingleProduct />} />
