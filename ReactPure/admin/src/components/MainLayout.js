@@ -5,6 +5,7 @@ import {
   AiOutlineShoppingCart,
   AiOutlineUser,
   AiOutlineBgColors,
+  AiOutlineLogout,
 } from "react-icons/ai";
 import { RiCouponLine } from "react-icons/ri";
 import { ToastContainer } from "react-toastify";
@@ -30,17 +31,9 @@ const MainLayout = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const logout = () => {
-    localStorage.removeItem("user");
-    dispatch(logout());
-  };
   const authState = useSelector((state) => state);
   const { user } = authState.auth;
-  // useEffect(() => {
-  //   if (!user) {
-  //     navigate("");
-  //   }
-  // }, [user]);
+
   return (
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
@@ -55,7 +48,9 @@ const MainLayout = () => {
           mode="inline"
           defaultSelectedKeys={[""]}
           onClick={({ key }) => {
-            if (key == "signout") {
+            if (key === "signout") {
+              localStorage.clear();
+              navigate("/");
             } else {
               navigate(key);
             }
@@ -172,6 +167,11 @@ const MainLayout = () => {
               icon: <FaClipboardList className="fs-4" />,
               label: "Enquiries",
             },
+            {
+              key: "signout",
+              icon: <AiOutlineLogout className="fs-4" />,
+              label: "Đăng xuất",
+            },
           ]}
         />
       </Sider>
@@ -183,19 +183,14 @@ const MainLayout = () => {
             background: colorBgContainer,
           }}
         >
-          {React.createElement(
-            collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-            {
-              className: "trigger",
-              onClick: () => setCollapsed(!collapsed),
-            }
-          )}
+          {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+            className: "trigger",
+            onClick: () => setCollapsed(!collapsed),
+          })}
           <div className="d-flex gap-4 align-items-center">
             <div className="position-relative">
               <IoIosNotifications className="fs-4" />
-              <span className="badge bg-warning rounded-circle p-1 position-absolute">
-                3
-              </span>
+              <span className="badge bg-warning rounded-circle p-1 position-absolute">3</span>
             </div>
 
             <div className="d-flex gap-3 align-items-center dropdown">
@@ -207,28 +202,17 @@ const MainLayout = () => {
                   alt=""
                 />
               </div>
-              <div
-                role="button"
-                id="dropdownMenuLink"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <h5 className="mb-0">
-                  {user && user.firstname + " " + user.lastname}
-                </h5>
+              <div role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                <h5 className="mb-0">{user && user.firstname + " " + user.lastname}</h5>
                 <p className="mb-0">{user && user.email}</p>
               </div>
               <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <li>
-                  <Link
-                    className="dropdown-item py-1 mb-1"
-                    style={{ height: "auto", lineHeight: "20px" }}
-                    to="/"
-                  >
+                  <Link className="dropdown-item py-1 mb-1" style={{ height: "auto", lineHeight: "20px" }} to="/">
                     View Profile
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link
                     className="dropdown-item py-1 mb-1"
                     style={{ height: "auto", lineHeight: "20px" }}
@@ -237,7 +221,7 @@ const MainLayout = () => {
                   >
                     Signout
                   </Link>
-                </li>
+                </li> */}
               </div>
             </div>
           </div>

@@ -11,6 +11,7 @@ const sendEmail = require("../controller/emailCTL");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const uniqid = require("uniqid");
+const { response } = require("express");
 
 exports.getUserProfile = asyncHandler(async (req, res) => {
   // req.user was set in authMiddleware.js
@@ -545,7 +546,7 @@ exports.myOrders = asyncHandler(async (req, res) => {
   }
 });
 
-//get order
+//get orders
 exports.getOrders = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   validateMongoDbId(_id);
@@ -556,18 +557,51 @@ exports.getOrders = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
-
+//user orders
 exports.getAllOrders = asyncHandler(async (req, res) => {
-  console.log("assd");
   try {
-    const alluserorders = await Order.find().populate("products.product").populate("orderby").exec();
+    //const alluserorders = await Order.find().populate("products.product").populate("orderby").exec();
+    const alluserorders = await Order.find().populate("orderItems.product").populate("user").exec();
     console.log(alluserorders);
     res.json(alluserorders);
   } catch (error) {
     throw new Error(error);
   }
 });
-
+exports.getAllOrdersDashboard = asyncHandler(async (req, res) => {
+  try {
+    const orders = await Order.find().populate("user").populate("orderItems.product");
+    res.json(orders);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+exports.getSingleOrder = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongoDbId(id);
+  try {
+    const order = await Order.findOne({ _id: id })
+      .populate("orderItems.product")
+      .populate("orderItems.color")
+      .populate("user");
+    res.json(order);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+exports.updateOrder = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongoDbId(id);
+  console.log("status",req.body.status);
+  try {
+    const orders = await Order.findById(id);
+    orders.orderStatus = req.body?.status;
+    await orders.save();
+    res.json(orders);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
 exports.getOrderByUserId = asyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongoDbId(id);
@@ -627,4 +661,89 @@ exports.addToWishList = asyncHandler(async (req, res) => {
   } catch (error) {
     throw new Error(error);
   }
+});
+
+exports.getMonthlyOrderData = asyncHandler(async (req, res) => {
+  let monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  let d = new Date();
+  let endDate = "";
+  d.setDate(1);
+  for (let index = 0; index < 11; index++) {
+    d.setMonth(d.getMonth() - 1);
+    endDate = monthNames[d.getMonth()] + "" + d.getFullYear();
+  }
+  const data = await Order.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $lte: new Date(),
+          $gte: new Date(endDate),
+        },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          month: "$month",
+        },
+        amount: { $sum: "$totalPriceAfterDiscount" },
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+  res.json(data);
+});
+exports.getYearlyTotalOrders = asyncHandler(async (req, res) => {
+  let monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  let d = new Date();
+  let endDate = "";
+  d.setDate(1);
+  for (let index = 0; index < 11; index++) {
+    d.setMonth(d.getMonth() - 1);
+    endDate = monthNames[d.getMonth()] + "" + d.getFullYear();
+  }
+  const data = await Order.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $lte: new Date(),
+          $gte: new Date(endDate),
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        count: { $sum: 1 },
+        amount: { $sum: "$totalPriceAfterDiscount" },
+      },
+    },
+  ]);
+  res.json(data);
 });

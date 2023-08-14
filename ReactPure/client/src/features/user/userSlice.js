@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import { authService } from "./userService";
 import { toast } from "react-toastify";
 
@@ -87,13 +87,14 @@ export const resetPassWord = createAsyncThunk("user/password/reset", async (data
     return thunkAPI.rejectWithValue(error);
   }
 });
-export const deleteUserCart = createAsyncThunk("user/cart/delete", async (config2,thunkAPI) => {
+export const deleteUserCart = createAsyncThunk("user/cart/delete", async (config2, thunkAPI) => {
   try {
     return await authService.emtyCart(config2);
   } catch (error) {
     return thunkAPI.rejectWithValue(error);
   }
 });
+export const resetState = createAction("Reset_all");
 const getUserfromLocalStorage = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
 
 const initialState = {
@@ -109,6 +110,7 @@ export const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(resetState, () => initialState)
       .addCase(registerUser.pending, (state) => {
         state.isLoading = true;
       })

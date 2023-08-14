@@ -1,89 +1,132 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import { BsArrowDownRight, BsArrowUpRight } from "react-icons/bs";
 import { Column } from "@ant-design/plots";
 import { Table } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { getMonthlyData, getOrders, getYearlyData } from "../features/auth/authSlice";
+
 const columns = [
   {
-    title: "SNo",
+    title: "STT",
     dataIndex: "key",
   },
   {
-    title: "Name",
+    title: "Tên",
     dataIndex: "name",
   },
   {
-    title: "Product",
+    title: "Sản phẩm",
     dataIndex: "product",
   },
   {
-    title: "Status",
-    dataIndex: "staus",
+    title: "Giá",
+    dataIndex: "price",
+  },
+  {
+    title: "Giá giảm",
+    dataIndex: "dprice",
+  },
+  {
+    title: "Trạng thái",
+    dataIndex: "status",
   },
 ];
-const data1 = [];
-for (let i = 0; i < 46; i++) {
-  data1.push({
-    key: i,
-    name: `Edward King ${i}`,
-    product: 32,
-    staus: `London, Park Lane no. ${i}`,
-  });
-}
+
 const Dashboard = () => {
-  const data = [
-    {
-      type: "Jan",
-      sales: 38,
+  const getTokenFromLocalStorage = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+  const config2 = {
+    headers: {
+      Authorization: `Bearer ${getTokenFromLocalStorage !== null ? getTokenFromLocalStorage.token : ""}`,
+      Accept: "application/json",
     },
-    {
-      type: "Feb",
-      sales: 52,
+  };
+  const dispatch = useDispatch();
+  const [dataMonthly, setDataMonthly] = useState([]);
+  const [monthlyOrderCount, setmonthlyOrderCount] = useState([]);
+  const [orderData, setOrderData] = useState([]);
+  const monthlyDataState = useSelector((state) => state?.auth?.monthlyData);
+  const yearlyDataState = useSelector((state) => state?.auth?.yearlyData);
+  const ordersState = useSelector((state) => state?.auth?.orders);
+  useEffect(() => {
+    dispatch(getMonthlyData(config2));
+    dispatch(getYearlyData(config2));
+    dispatch(getOrders(config2));
+  }, []);
+  useEffect(() => {
+    const monthNames = [
+      "Tháng 01",
+      "Tháng 02",
+      "Tháng 03",
+      "Tháng 04",
+      "Tháng 05",
+      "Tháng 06",
+      "Tháng 07",
+      "Tháng 08",
+      "Tháng 09",
+      "Tháng 10",
+      "Tháng 11",
+      "Tháng 12",
+    ];
+    let monthlyIncome = [];
+    let monthlyOrderCount = [];
+    for (let i = 0; i < monthlyDataState?.length; i++) {
+      const element = monthlyDataState[i];
+      monthlyIncome.push({ month: monthNames[element?._id?.month - 1], income: element?.amount });
+      monthlyIncome.sort((a, b) => a.month?.localeCompare(b.month));
+
+      monthlyOrderCount.push({ month: monthNames[element?._id?.month - 1], count: element?.count });
+      monthlyOrderCount.sort((a, b) => a.month?.localeCompare(b.month));
+    }
+    setDataMonthly(monthlyIncome);
+    setmonthlyOrderCount(monthlyOrderCount);
+
+    const orders = [];
+    for (let i = 0; i < ordersState?.length; i++) {
+      orders.push({
+        key: i,
+        name: ordersState[i]?.user?.lastname + " " + ordersState[i]?.user?.firstname,
+        product: ordersState[i]?.orderItems?.length,
+        price: ordersState[i]?.totalPrice,
+        dprice: ordersState[i]?.totalPriceAfterDiscount,
+        status: ordersState[i]?.orderStatus,
+      });
+    }
+    setOrderData(orders);
+  }, [monthlyDataState, monthlyDataState, ordersState]);
+
+  const dataOrderIncome = {
+    data: dataMonthly,
+    xField: "month",
+    yField: "income",
+    color: ({ type }) => {
+      return "#ffd333";
     },
-    {
-      type: "Mar",
-      sales: 61,
+    label: {
+      position: "middle",
+      style: {
+        fill: "#FFFFFF",
+        opacity: 1,
+      },
     },
-    {
-      type: "Apr",
-      sales: 145,
+    xAxis: {
+      label: {
+        autoHide: true,
+        autoRotate: false,
+      },
     },
-    {
-      type: "May",
-      sales: 48,
+    meta: {
+      type: {
+        alias: "Month",
+      },
+      sales: {
+        alias: "Income",
+      },
     },
-    {
-      type: "Jun",
-      sales: 38,
-    },
-    {
-      type: "July",
-      sales: 38,
-    },
-    {
-      type: "Aug",
-      sales: 38,
-    },
-    {
-      type: "Sept",
-      sales: 38,
-    },
-    {
-      type: "Oct",
-      sales: 38,
-    },
-    {
-      type: "Nov",
-      sales: 38,
-    },
-    {
-      type: "Dec",
-      sales: 38,
-    },
-  ];
-  const config = {
-    data,
-    xField: "type",
-    yField: "sales",
+  };
+  const dataOrderCount = {
+    data: monthlyOrderCount,
+    xField: "month",
+    yField: "count",
     color: ({ type }) => {
       return "#ffd333";
     },
@@ -115,51 +158,48 @@ const Dashboard = () => {
       <div className="d-flex justify-content-between align-items-center gap-3">
         <div className="d-flex justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
           <div>
-            <p className="desc">Total</p>
-            <h4 className="mb-0 sub-title">$1100</h4>
+            <p className="desc">Tổng tiền</p>
+            <h4 className="mb-0 sub-title">
+              {yearlyDataState && yearlyDataState[0]?.amount?.toLocaleString("vi-VN")}vnđ
+            </h4>
           </div>
           <div className="d-flex flex-column align-items-end">
-            <h6>
+            {/* <h6>
               <BsArrowDownRight /> 32%
-            </h6>
-            <p className="mb-0  desc">Compared To April 2022</p>
+            </h6> */}
+            <p className="mb-0  desc">Thu nhập năm trước đến hiện tại</p>
           </div>
         </div>
         <div className="d-flex justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
           <div>
-            <p className="desc">Total</p>
-            <h4 className="mb-0 sub-title">$1100</h4>
+            <p className="desc">Tổng đơn hàng</p>
+            <h4 className="mb-0 sub-title">{yearlyDataState && yearlyDataState[0]?.count}</h4>
           </div>
           <div className="d-flex flex-column align-items-end">
-            <h6 className="red">
+            {/* <h6 className="red">
               <BsArrowDownRight /> 32%
-            </h6>
-            <p className="mb-0  desc">Compared To April 2022</p>
-          </div>
-        </div>
-        <div className="d-flex justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
-          <div>
-            <p className="desc">Total</p>
-            <h4 className="mb-0 sub-title">$1100</h4>
-          </div>
-          <div className="d-flex flex-column align-items-end">
-            <h6 className="green">
-              <BsArrowDownRight /> 32%
-            </h6>
-            <p className="mb-0 desc">Compared To April 2022</p>
+            </h6> */}
+            <p className="mb-0  desc">Tổng đơn hàng từ năm trước đến hiện tại</p>
           </div>
         </div>
       </div>
+
       <div className="mt-4">
-        <h3 className="mb-5 title">Income Statics</h3>
+        <h3 className="mb-5 title">Doanh thu </h3>
         <div>
-          <Column {...config} />
+          <Column {...dataOrderIncome} />
         </div>
       </div>
       <div className="mt-4">
-        <h3 className="mb-5 title">Recent Orders</h3>
+        <h3 className="mb-5 title">Đơn hàng </h3>
         <div>
-          <Table columns={columns} dataSource={data1} />
+          <Column {...dataOrderCount} />
+        </div>
+      </div>
+      <div className="mt-4">
+        <h3 className="mb-5 title">Đơn hàng vừa nhận</h3>
+        <div>
+          <Table columns={columns} dataSource={orderData} />
         </div>
       </div>
     </div>

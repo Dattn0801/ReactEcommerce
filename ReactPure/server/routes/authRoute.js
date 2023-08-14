@@ -31,13 +31,20 @@ const {
   removeProductFromCart,
   updateProductQuantityFromCart,
   myOrders,
+  getMonthlyOrderData,
+  getYearlyTotalOrders,
+  getAllOrdersDashboard,
+  getSingleOrder,
+  updateOrder,
 } = require("../controller/userCTL");
 
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 const { paymentVerification, checkout } = require("../controller/paymentCTL");
 router.get("/get-myorders", authMiddleware, myOrders);
+router.get("/getallorders", authMiddleware, isAdmin, getAllOrdersDashboard);
+router.get("/getoneorder/:id", authMiddleware, isAdmin, getSingleOrder);
+router.put("/updateOrder/:id", authMiddleware, isAdmin, updateOrder);
 
-router.get("/getallorders", authMiddleware, isAdmin, getAllOrders);
 router.get("/profile", authMiddleware, getUserProfile);
 router.get("/all-users", getallUser);
 router.post("/login", loginUser);
@@ -65,6 +72,9 @@ router.put("/order/update-order/:id", authMiddleware, isAdmin, updateOrderStatus
 
 router.delete("/delete-product-cart/:cartItemId", authMiddleware, removeProductFromCart);
 router.delete("/update-product-cart/:cartItemId/:newQuantity", authMiddleware, updateProductQuantityFromCart);
+
+router.get("/getmonthlyorders", authMiddleware, getMonthlyOrderData);
+router.get("/getyearlyorders", authMiddleware, getYearlyTotalOrders);
 
 // router.get("/orders", authMiddleware, getOrders);
 router.post("/register", createUser);

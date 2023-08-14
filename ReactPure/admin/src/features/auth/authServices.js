@@ -11,19 +11,27 @@ const login = async (user) => {
 
 const logout = () => {
   localStorage.removeItem("user");
-  return
+  return;
 };
-const getOrders = async () => {
-  const response = await axios.get(`${base_url}user/getallorders`, config);
+const getOrders = async (config2) => {
+  const response = await axios.get(`${base_url}user/getallorders`, config2);
   return response.data;
 };
-const getOrder = async (id) => {
-  const response = await axios.post(
-    `${base_url}user/getorderbyuser/${id}`,
-    "",
-    config
-  );
-
+const getOrder = async (data) => {
+  const response = await axios.get(`${base_url}user/getoneorder/${data?._id}`, data?.config2);
+  return response.data;
+};
+const updateOrder = async (data) => {
+  console.log(data);
+  const response = await axios.put(`${base_url}user/updateOrder/${data?.id}`, { status: data?.status }, data?.config2);
+  return response.data;
+};
+const getMonthlyData = async (config2) => {
+  const response = await axios.get(`${base_url}user/getmonthlyorders`, config2);
+  return response.data;
+};
+const getYearlyData = async (config2) => {
+  const response = await axios.get(`${base_url}user/getyearlyorders`, config2);
   return response.data;
 };
 
@@ -32,6 +40,9 @@ const authService = {
   logout,
   getOrders,
   getOrder,
+  updateOrder,
+  getMonthlyData,
+  getYearlyData,
 };
 
 export default authService;
